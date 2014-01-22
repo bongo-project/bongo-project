@@ -2,10 +2,6 @@ name: "Bongo"
 description: "Bongo is an easy-to-use mail and calendar system, offering a simple yet powerful user interface. The goal is to make sharing, organisation, and communication simpler, quicker, and more useful."
 
 url: "bongo-project.org"
-# baseurl: "/bongo-project"
-
-# paginate: 10
-
 markdown: rdiscount
-permalink: pretty
+permalink: /:title
 pygments: true
