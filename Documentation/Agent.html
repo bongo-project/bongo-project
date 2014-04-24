@@ -1,0 +1,26 @@
+---
+layout: default
+title: Development Agent - Bongo
+---
+
+<h2>Agent</h2>
+
+An <em>agent</em> is a standalone piece of software in Bongo, similar to a Unix daemon.  
+<p>Agents in Bongo tend to be very specialised and light-weight compared to their Unix counterparts:<br>
+for example, a Unix MTA may speak SMTP, run a mail queue and deliver mail.</p> 
+In Bongo, that is separated into three separate agents.  
+
+<h2>Bongo's agents</h2>
+<p>Bongo comes with several agents. These include:</p>
+	<ul>
+		<li><a href="">an [[SMTP]] agent</a></li>
+		<li><a href="">an [[IMAP]] agent</a></li>
+		<li><a href="">an antivirus agent</a></li>
+		<li><a href="">a [[queue]] agent</a></li>
+		<li><a href="">a [[store]] agent</a></li>
+		<li><a href="">a [[POP3]] agent</a></li>
+	</ul>
+among others. 
+<h2>Writing your own</h2>
+
+<p>Check out the 'generic' agent (in <code>src/agents/generic</code>) for some information as to how you should write your agent.</p>
