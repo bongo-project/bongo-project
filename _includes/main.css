@@ -41,7 +41,7 @@ a:hover {
     text-decoration: underline;
 }
 
-a.new {
+.new {
 	color: #CD0000;
 }
 
@@ -62,7 +62,7 @@ img, a img {
 .wrap {
 	width: 995px;
 	margin: 0 auto;
-	padding: 0px;
+	padding: 0;
 	clear: both;
 }
 
@@ -277,6 +277,21 @@ img, a img {
 .content a:hover {
 	text-decoration: none;
 	border-bottom: 1px dotted;
+}
+
+.conservancy {
+	-ms-word-break: break-all;
+	-epub-word-break: break-all;
+	     /* Be VERY careful with this, breaks normal words wh_erever */
+	     /*word-break: break-all;*/
+
+	     /* Non standard for webkit */
+	     word-break: break-word;
+
+	-webkit-hyphens: auto;
+	   -moz-hyphens: auto;
+	   -epub-hyphens: auto;
+	        hyphens: auto;
 }
 
 /* Content Editing */
