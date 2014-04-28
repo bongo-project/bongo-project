@@ -5,3 +5,5 @@ url: "bongo-project.org"
 markdown: redcarpet
 permalink: /:title
 pygments: true
+gems:
+  - jekyll-sitemap
