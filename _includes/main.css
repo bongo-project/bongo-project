@@ -690,6 +690,18 @@ table {
         padding: 0; 
     }
 
+#twocontainer {
+	width:100%;
+}
+#left_column {
+    float:left;
+    width:50%;
+}
+#right_column {
+    float:left;
+    width:50%;
+}
+
 .thumb {
     position: relative;
 }
