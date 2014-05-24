@@ -1,0 +1,27 @@
+---
+layout: default
+title: Autogen Options - Bongo
+---
+
+'''Note:''' While many of these options are helpful for debugging, they are not safe for public Bongoservers.  If you aren't sure about autogen options, you should probably stick to the examples in the <a href="{{url}}/Documentation/InstallFromSource.html">Install from source</a> page.
+
+'''This list is not yet complete. Additions are welcome.'''
+
+<pre>--prefix=</pre>
+specifies where the compiled code tree will be installed to. E.g.
+<pre>--prefix=/opt/bongo</pre>
+<pre>--with-user=</pre>
+specifies the user that Bongo will run as. This increases security. E.g.
+<pre>--with-user=bongo</pre>
+<pre>--enable-debug-cflags</pre>
+adds debug flags to your compile command so that debug symbols are added. Very good flag to know about.
+<pre>--enable-conntrace</pre>
+turns on connection tracing.  For debugging, this is superior to other tracing means because it will show encrypted connections in clear text. For the same reason, it is very insecure.
+<pre>--enable-mdbdebug</pre>
+adds debugging verbs to IMAP to allow convenient debugging of MDB performance.  '''VERY INSECURE''' could allow username mining in the wrong hands. You have been warned.
+The IMAP commands enabled are of the form <pre>user <verb> <args></pre>.  The added verbs are lookup, verify, and read:
+<pre>1 user lookup admin</pre>
+<pre>2 user verify /example/admin bongo</pre>
+<pre>3 user read /example/admin surname</pre>
+<pre>--enable-memmgrleakreporting</pre>
+causes the memory manager to print reports about leaked memory when an application ends.  You may need to send your own SIGTERM to the agent that you want to see the report on since [[Commands/hulamanager|hulamanager]] often SIGKILLs agents that take too long to unload.

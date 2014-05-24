@@ -1,0 +1,35 @@
+---
+layout: default
+title: Bongo Query Language - Bongo
+---
+
+<h2>Bongo Query Language</h2>
+
+A number of store commands can be supplemented with simple queries, which clients can use to get back more specific information than the standard commands and parameters allow.
+
+<h3>Why a query language?</h3>
+
+It's relatively clear that a number of clients will need or desire data sets which are more specific than our standard commands can return, so this simple query language was put in place. It is also used internally, so many of the commands which seem to do equivalent things are actually translated "under the hood" as it were.
+
+By enabling this flexibility, the store can become a much richer source of information, and reduce the burden on client applications.
+
+<h3>Overview</h3>
+
+The query language has been designed to be parsed extremely efficiently, and is set-up so that it can be translated readily into SQL commands. As a consequence of this, it is rather less human-friendly than the rest of our protocol, but while it looks strange on the surface, it is extremely easy to use once you understand it.
+
+The language is formed of operators and functions, all of which take two arguments, and the notation is infix: the operator or function name comes first, followed by the two arguments.
+
+The operators are:
+
+<table class="table">
+	<th>Operator</th>
+	<th>Description</th>
+	<tr>
+		<td>&</td>
+		<td>Logical AND</td>
+	<tr/>
+	<tr>
+		<td>more</td>
+		<td>Logical OR</td>
+	</tr>
+</table>
