@@ -1,0 +1,92 @@
+---
+layout: default
+title: Release Notes 0.2.0 - Bongo
+---
+
+<h1>Bongo M1 (0.2.0) Release notes</h1>
+
+<div class="warning-alpha">
+Bongo is currently alpha-quality software.  It is under active development and is not yet ready for production servers. 
+
+However, we encourage you to try it out in a test environment and let us know what you think!
+</div>
+
+<h2>About Bongo</h2>
+
+<p>Bongo is a project to create fun and simple mail & calendaring software. As well as providing a well-featured but extensible set of server software, it also comes with a user-friendly web interface.</p>
+
+<p>Although Bongo is a young project, the software itself has a long pedigree going back to commercial products many years old. The core code isn't new, but the ideas we have and the direction we're taking are: we aim to provide a compelling alternative to other systems out there, not to compete directly with them.</p>
+
+<p>We have a roadmap laid out to our 1.0 release, which we hope will appeal primarily to people who are interested in features which make email and calendars more useful, rather than those interested in "groupware" or "enterprise communication platforms". We're particularly aiming 1.0 at power home users, small organisations/businesses, and people providing mail services for third parties.</p>
+
+<h2>This Release</h2>
+<h2>What's In This Release?</h2>
+
+<p>The M2 release is the second release on the Bongo roadmap. As a source-only release, it is intended only for developers and advanced users who understand they will probably experience bugs and/or rough edges.</p>
+
+<p>M2 provides a working e-mail and calendaring system, the web user interface for e-mail and calendaring, and a web administration system. There are basic command line tools available to configure the system.</p>
+
+<h2>What's New?</h2>
+
+<p>The headline features in this release are:</p>
+<ul>
+	<li>the brand-new "hawkeye" web administration tool</li>
+	<li>antivirus and antispam are now supported</li>
+	<li>support for encrypted SMTP sessions.</li>
+</ul>
+<p>There are numerous under-the-bonnet changes which will interest developers. We have simplified the system for loading configuration, and are in the process of removing the "MDB" LDAP-like system - we hope this will be complete by the next release.</p>
+
+<h2>Download and installation</h2>
+
+<p>You can download the M2 release from the GNA download page:</p>
+
+<p>http://download.gna.org/bongo/release/pre1.0/M2/</p>
+
+<p>As a quick start, you once you've downloaded the release, you then:</p>
+
+  <pre>tar -jxf bongo-0.2.0.tar.bz2
+  cd bongo-0.2.0
+  ./configure --prefix=/usr/local/bongo
+  make
+  (as root from here)
+  make install
+  cd /usr/local/bongo
+  ./sbin/bongo-setup
+  ./sbin/bongo-config install</pre>
+
+<p>We have instructions for compilation in our [[Installation/Source | source guide]] - you will need to fulfil various dependencies, but they are mostly pretty simple.</p>
+
+<p>After you have compiled and installed, you can then set about [[Configuration/Bongo | configuring Bongo]].</p>
+
+<p>Binary packages of Bongo are also being made available on an ongoing basis, but remember that this is a developer release.</p>
+
+<h2>Known Issues</h2>
+
+<p>You may want to review the project bugs page to see a complete list of those issues discovered. At the time of release, the following bugs are known:</p>
+
+<ul>
+	<li>e-mails without a subject may be incorrectly grouped into a single conversation</li>
+	<li>generating encryption data in bongo-setup is quite slow</li>
+	<li>systems with "low entropy" (small amount of hardware-generated randomness data available, usually server-type systems with no attached I/O) may take a ''very'' long time to generate the encryption data needed by Bongo during bongo-setup (related to the previous issue). Plugging in a keyboard and hitting keys helps.</li>
+	<li>some mail headers are sometimes incorrectly parsed.</li>
+	<li>we believe there may be a generic problem crashing our search subsystem (CLucene) on 64-bit platforms</li>
+	<li>the web administration system doesn't work under Apache</li>
+</ul>
+
+<h2>Next Release</h2>
+
+<p>The next release will be M3, and is currently scheduled for 23rd June, but is likely to be a week or two later. Key features that will be coming in that release:</p>
+
+<ul>
+	<li>support for virtual domains</li>
+	<li>completion of the new web administration tool</li>
+	<li>simplified install process, without a dependency on an LDAP server</li>
+	<li>mail forwarding and address rewriting</li>
+</ul>
+
+<p>There will also be technical advances that are not immediately visible to users.</p>
+
+<p>This will be our first preview release: we will be asking non-developers to try this software for the first time. As such, there will be fewer new features in M3 compared to M2, but hopefully a lot more stability and reliability. M3 will only be released when we're happy it's useful for people to test.</p>
+
+
+<p>For further information, see the <a href="{{url}}/Documentation/RoadMap.html">Roadmap</a>.</p>

@@ -1,0 +1,102 @@
+---
+layout: default
+title: Release Notes 0.4.0 - Bongo
+---
+
+<h1>Bongo M1 (0.4.0) Release notes</h1>
+
+<div class="warning-alpha">
+Bongo is currently alpha-quality software.  It is under active development and is not yet ready for production servers. 
+
+However, we encourage you to try it out in a test environment and let us know what you think!
+</div>
+
+<h2>About Bongo</h2>
+
+<p>Bongo is a project to create fun and simple mail & calendaring software. As well as providing a well-featured but extensible set of server software, it also comes with a user-friendly web interface.</p>
+
+<p>Although Bongo is a young project, the software itself has a long pedigree going back to commercial products many years old. The core code isn't new, but the ideas we have and the direction we're taking are: we aim to provide a compelling alternative to other systems out there, not to compete directly with them.</p>
+
+<p>We have a roadmap laid out to our 1.0 release, which we hope will appeal primarily to people who are interested in features which make email and calendars more useful, rather than those interested in "groupware" or "enterprise communication platforms". We're particularly aiming 1.0 at power home users, small organisations/businesses, and people providing mail services for third parties.</p>
+
+<h2>What's In This Release?</h2>
+
+<p>This is the sixth release on the Bongo roadmap. As a source-only release, it is intended only for developers and advanced users who understand they will probably experience bugs and/or rough edges. This is also a server-only release: the web UI is known to have serious faults and isn't included.</p>
+
+<p>However, we do intend that this release be usable for those brave users willing to try it: our previous releases, M4 and M5, have been used successfully by a number of people and has proved to be relatively stable.</p>
+
+<h2>What's New?</h2>
+
+<p>Compared to 0.5, most of the changes will mainly interest developers. We have reworked the build system so that it is faster and easier to use, the libraries Bongo uses have been simplified and "imported" code has been removed, and various compiler warnings and errors have been found and fixed.</p>
+
+
+<h2>Download and installation</h2>
+
+<p>With this release, we are making both source and binaries available. However, as the binaries are quite "new" we are still labelling this a source-only release. Please try the binaries first if you are able, and report any problems.</p>
+
+<h3>Binary installation</h3>
+
+<b>TODO :)</b>
+
+<h3>Source installation</h3>
+
+<p>http://download.gna.org/bongo/release/bongo-0.6.0.tar.bz2</p>
+
+<p>As a quick start, you once you've downloaded the release, you then:</p>
+
+  <pre>tar -jxf bongo-0.6.0.tar.bz2
+  cd bongo-0.6.0
+  mkdir build
+  cd build
+  cmake ../ -DCMAKE_INSTALL_PREFIX=/usr/local/bongo -DBONGO_USER=bongo
+  make
+  (as root from here)
+  make install
+  cd /usr/local/bongo
+  ./sbin/bongo-config install</pre>
+
+<p>We have instructions for compilation in our [[Installation/Source | source guide]] - you will need to fulfil various dependencies, but they are mostly pretty simple.</p>
+
+<p>After you have compiled and installed, you can then set about [[Configuration/Bongo | configuring Bongo]].</p>
+
+<p>Binary packages of Bongo are also being made available on an ongoing basis, but remember that this is a developer release.</p>
+
+<h2>Upgrading</h2>
+
+<p>The upgrade should be relatively simple, and it should be possible to install 0.6 "over" an existing 0.4 or 0.5 installation and have it continue to work in the same manner. However, you should backup your data before attempting this.</p>
+
+<p>To backup mail boxes, use a command such as:</p>
+
+  <pre>bongo-storetool -u <user> -p <password> -h <bongo IP> sb</pre>
+
+<p>Leave out the host option if you are on the localhost. This will create a file called <user>.backup, which can then be restored with:</p>
+
+  <pre>bongo-storetool -u <user> -p <password> sr <user to restore> [<backup file>]</pre>
+
+<p>See the bongo-storetool help for further options to store-backup (sb) and store-restore (sr). In particular, you only need to specific the backup file if the username has changed.</p>
+
+<p>Having used storetool to back up the system, you could then install over the existing installation or do a clean installation. If you prefer the clean route, you will need to re-create your users and domains configuration after installation, then you can restore your mailboxes.</p>
+
+
+<h2>Known Issues</h2>
+
+<p>You may want to review the project bugs page to see a complete list of those issues discovered. At the time of release, the following bugs are known:</p>
+
+<ul>
+	<li>(major) the Dragonfly web UI is unusable for most users</li>
+	<li>there are generic problems with bounce mail handling</li>
+	<li>there are known problems with the queue sometimes "jamming"; usually a restart or 'bongo-queuetool flush' can fix this</li>
+	<li>there are known problems talking to other SMTP servers using TLS encryption</li>
+</ul>
+
+<p>Because of the large number of changes in this release, we expect that there may be several bugs which will bite people testing M4. We do intend to support tester/developers with this release, and will actively maintain this branch of the software, though.</p>
+
+<h2>Next Release</h2>
+
+<p>As a supported branch of Bongo, 0.6 will receive minor updates, and in due course we will make further releases for those people trying to use it in practice.</p>
+
+<p>The next major release will be 0.7. This will be in line with our new time-based release process, and will arrive at the start of October.</p>
+
+<p>There will also be technical advances that are not immediately visible to users.</p>
+
+<p>For further information, see the <a href="{{url}}/Documentation/RoadMap.html">Roadmap</a>.</p>
