@@ -1,0 +1,84 @@
+---
+layout: default
+title: Release Notes 0.4.0 - Bongo
+---
+
+<h1>Bongo M1 (0.4.0) Release notes</h1>
+
+<div class="warning-alpha">
+Bongo is currently alpha-quality software.  It is under active development and is not yet ready for production servers. 
+
+However, we encourage you to try it out in a test environment and let us know what you think!
+</div>
+
+<h2>About Bongo</h2>
+
+<p>Bongo is a project to create fun and simple mail & calendaring software. As well as providing a well-featured but extensible set of server software, it also comes with a user-friendly web interface.</p>
+
+<p>Although Bongo is a young project, the software itself has a long pedigree going back to commercial products many years old. The core code isn't new, but the ideas we have and the direction we're taking are: we aim to provide a compelling alternative to other systems out there, not to compete directly with them.</p>
+
+<p>We have a roadmap laid out to our 1.0 release, which we hope will appeal primarily to people who are interested in features which make email and calendars more useful, rather than those interested in "groupware" or "enterprise communication platforms". We're particularly aiming 1.0 at power home users, small organisations/businesses, and people providing mail services for third parties.</p>
+
+<h2>What's In This Release?</h2>
+
+<p>TThis is the fourth release on the Bongo roadmap. As a source-only release, it is intended only for developers and advanced users who understand they will probably experience bugs and/or rough edges. This is also a server-only release: the web UI is known to have serious faults and isn't usable.</p>
+
+<p>However, we do intend that this release be usable for those brave users willing to try it: our previous release, M3, has been used by a small number and the faults found in it have been remedied for M4. We hope with M4, more people will be willing to take the plunge and try.
+</p>
+
+
+<h2>What's New?</h2>
+
+<p>The main change in this release compared to M3 is an entirely re-worked Store underpinning Bongo; while this isn't very visible to the end user, people using Bongo via IMAP will notice speed and reliability improvements.</p>
+
+<p>The server-side parts of Bongo are now roughly feature-complete and will be changing little between now and 1.0, and we will be supporting people upgrading from version to version for the first time via our mailbox backup/restore system.</p>
+
+<h2>Download and installation</h2>
+
+<p>You can download the M4 release from the GNA download page:</p>
+
+<p>http://download.gna.org/bongo/release/bongo-0.4.0.tar.bz2</p>
+
+<p>As a quick start, you once you've downloaded the release, you then:</p>
+
+  <pre>tar -jxf bongo-0.4.0.tar.bz2
+  cd bongo-0.3.0
+  ./configure --prefix=/usr/local/bongo
+  make
+  (as root from here)
+  make install
+  cd /usr/local/bongo
+  ./sbin/bongo-setup
+  ./sbin/bongo-config install</pre>
+
+<p>We have instructions for compilation in our [[Installation/Source | source guide]] - you will need to fulfil various dependencies, but they are mostly pretty simple.</p>
+
+<p>After you have compiled and installed, you can then set about [[Configuration/Bongo | configuring Bongo]].</p>
+
+<p>Binary packages of Bongo are also being made available on an ongoing basis, but remember that this is a developer release.</p>
+
+<h2>Known Issues</h2>
+
+<p>You may want to review the project bugs page to see a complete list of those issues discovered. At the time of release, the following bugs are known:</p>
+
+<ul>
+	<li> (major) the Dragonfly web UI is unreliable and buggy for many users</li>
+	<li>e-mails without a subject may be incorrectly grouped into a single conversation</li>
+	<li>there are generic problems with bounce mail handling</li>
+</ul>
+<p>Because of the large number of changes in this release, we expect that there may be several bugs which will bite people testing M4. We do intend to support tester/developers with this release, and will actively maintain this branch of the software, though.</p>
+
+<h2>Next Release</h2>
+
+<p>As a supported branch of Bongo, M4 will receive minor updates, and in due course we will make further releases for those people trying to use it in practice.</p>
+
+<p>The next major release will be M5. Coming in that release:</p>
+
+<ul>
+	<li>new, more reliable, web UI for mail and calendar</li>
+	<li>complete Hawkeye web UI for administration</li>
+</ul>
+
+<p>There will also be technical advances that are not immediately visible to users.</p>
+
+<p>For further information, see the <a href="{{url}}/Documentation/RoadMap.html">Roadmap</a>.</p>
