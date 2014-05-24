@@ -1,0 +1,39 @@
+---
+layout: default
+title: Hawkeye - Bongo
+---
+
+<h3>Bongo 1.0 Administration Interface</h3>
+<p>This will be a simple web UI, similar in look to Dragonfly(?), and based on the same "technology" (the same framework).</p>
+<p>This spec doesn't cover the CLI UI.</p>
+<b>Features:</b>
+<ul>
+	<li>manage users on the system
+		<ul>
+			<li>add, remove users</li>
+			<li>change user preferences(?) (use case: support)</li>
+		</ul>
+	</li>
+	<li>manage hosted domains to receive e-mail</li>
+	<li>ability to turn agents on and off</li>
+	<li>able to configure key agent functionality, e.g.:
+		<ul>
+			<li>SMTP, IMAP, POP3 ports</li>
+			<li>whether or not secure services are used</li>
+		</ul>
+	</li>
+	<li>able to manage secure services:
+		<ul>
+			<li>can generate a new certificate</li>
+			<li>can load an existing (non-snake-oil?) certificate</li>
+		</ul>
+	</li>
+	<li>tells the admin when a restart is needed for config to take effect (I suspect we ''don't'' want instant apply type tech here)</li>
+	<li>ability to restart the Bongo system from the UI
+		<ul>
+			<li>ability to stop / start system in general (?)</li>
+		</ul>
+	</li>
+	<li>get basic stats on the system: e-mails being processed, load on the system</li>
+	<li>ability to view some logs</li>
+</ul> 

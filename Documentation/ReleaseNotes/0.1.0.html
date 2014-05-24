@@ -1,0 +1,52 @@
+---
+layout: default
+title: Release Notes 0.1.0 - Bongo
+---
+
+<h1>Bongo M1 (0.1.0) Release notes</h1>
+
+<div class="warning-alpha">
+Bongo is currently alpha-quality software.  It is under active development and is not yet ready for production servers. 
+
+However, we encourage you to try it out in a test environment and let us know what you think!
+</div>
+
+<h2>About Bongo</h2>
+
+<p>Bongo is a project to create fun and simple mail & calendaring software. As well as providing a well-featured but extensible set of server software, it also comes with a user-friendly web interface.</p>
+
+<p>Although Bongo is a young project, the software itself has a long pedigree going back to commercial products many years old. The core code isn't new, but the ideas we have and the direction we're taking are: we aim to provide a compelling alternative to other systems out there, not to compete directly with them.</p>
+
+<p>We have a roadmap laid out to our 1.0 release, which we hope will appeal primarily to people who are interested in features which make email and calendars more useful, rather than those interested in "groupware" or "enterprise communication platforms". We're particularly aiming 1.0 at power home users, small organisations/businesses, and people providing mail services for third parties.</p>
+
+<h2>This Release</h2>
+
+<p>The M1 release is the first release on the Bongo roadmap. As a source-only release, it is intended only for developers and advanced users who understand they probably will experience bugs and/or rough edges.</p>
+
+<p>M1 provides a working e-mail and calendaring system, and the web user interface. There are basic command line tools available to configure the system.</p>
+
+<p>(instructions to download the release here)</p>
+
+<h2>Known Issues</h2>
+
+<p>You may want to review the project bugs page to see a complete list of those issues discovered. At the time of release, the following bugs are known:</p>
+<ul>
+	<li>e-mails without a subject may be incorrectly grouped into a single conversation</li>
+	<li>systems with "low entropy" (small amount of hardware-generated randomness data available, usually server-type systems with no attached I/O) may take a long time to generate the encryption data needed by Bongo during bongo-setup</li>
+	<li>IMAP and POP3 support encrypted connections; SMTP however does not.</li>
+	<li>some mail headers are sometimes incorrectly parsed.</li>
+</ul>
+
+<h2>Next Release</h2>
+
+<p>The next release will be M2, and is currently scheduled for XXXXX. Key features that will be coming in that release:</p>
+<ul>
+	<li>antivirus agent</li>
+	<li>antispam agent</li>
+	<li>new SMTP agent which supports SSL and TLS operation</li>
+	<li>mail forwarding and address rewriting</li>
+</ul>
+
+<p>There will also be technical advances that are not immediately visible to users.</p>
+
+<p>For further information, see the <a href="{{url}}/Documentation/RoadMap.html">Roadmap</a>.</p>
