@@ -1,0 +1,44 @@
+---
+layout: default
+title: Troubleshooting - Bongo
+---
+<h1>Troubleshooting</h1>
+<h2>First things first</h2>
+<ol>
+	<li>You must run a '''2.6 version of the kernel'''. This is because Bongo requires <a href="http://en.wikipedia.org/wiki/Native_POSIX_Thread_Library">NPTL</a> support. Run "<code>uname -r</code>" at the command line to see what version you're running if you don't know.</li>
+	<li>Are you running Xen? If you don't know the answer to that, you're probably not, but some virtual hosting setups (like Linode, Bytemark, etc.) use Xen. Bongo needs <a href="http://en.wikipedia.org/wiki/Transport_Layer_Security"> TLS </a> enabled to run under Xen. Run "<code>uname -a</code>" at the command line - if this affects you, it will usually (but not always!) have "xenU" in there somewhere.</li>
+	<li>You should attempt to use '''managed-ldap''', configured in <code>bongo-setup</code>.</li>
+</ol>
+
+<h2>Dragonfly</h2>
+
+<p>If your Dragonfly isn't letting you log in then read on for potential solutions:</p>
+<ol>
+	<li>Your username and password should be correct. The default administration username is <code>admin</code>, and password is <code>bongo</code>.</li>
+	<li>Your '''Apache configuration''' must be correct. If you're running Dragonfly through Apache, you need to get the configuration right before it will even come close to running. In general, if you're using something close to the configuration that comes with Bongo, the following won't work:
+		<ol>
+			<li>Accessing by IP - usually, the setup relies on accessing the Bongo config by server name. If you access by IP, you may not be getting the config from the correct virtual host.</li>
+			<li>Accessing by <code>http://localhost/bongo/</code> or similar - this usually means you're not accessing the correct virtual host, but the default host.</li>
+		</ol>
+	</li>
+	<li>Another common one is that '''Apache always needs to be properly restarted''' if you (re)start Bongo. There's like some LDAP connectivity reason, and I guess it's a bug, but it holds for now.</li>
+	<li>If you're '''not getting 404s''', it's likely your error log has something else fairly common. A line like:
+		<ol>
+			<li><pre>[Fri Oct 13 06:06:06 2006] [error] [client 127.0.0.1] PythonHandler bongo.dragonfly.Server: Traceback (most recent call last):</pre></li>
+			<li>... followed by other stuff is a Python error, and indicates a problem either with the libraries or an error not being checked in the code. The problem really depends on the output, but it could be things like:
+				<ul>
+					<li>Python setup in Apache wrong;</li>
+					<li>incorrect version of Python, or missing libraries;</li>
+					<li>missing dependency of some sort;</li>
+					<li>a bug in Bongo</li>
+				</ul>
+			</li>
+		</ol>
+	</li>
+</ol>
+
+<h2>Xen</h2>
+
+<p>Bongo won't work if you have disabled Xen <a href="http://en.wikipedia.org/wiki/Transport_Layer_Security"> TLS </a>(<code>mv /lib/tls /lib/tls.disabled</code> like often said into Xen installation guides). </p>
+
+<p>You will be able to connect to the login page but authentication will fail. Try enabling the TLS support back (<code>mv /lib/tls.disabled /lib/tls</code>) and try again. It causes Xen to run slower, but sadly Bongo needs this functionality.</p>

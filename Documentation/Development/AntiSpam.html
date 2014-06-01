@@ -1,0 +1,24 @@
+---
+layout: default
+title: AntiSpam - Bongo
+---
+
+<h1>Store Configuration Scheme<h2>
+<code>
+<pre>
+	{
+	  version (integer): 1,
+	  enabled (boolean): 1,
+	  timeout (integer - milliseconds): 20,
+	  host (string - see below): 127.0.0.1:783:1
+	 }
+</pre>
+</code>
+<h3>Host format</h3>
+	<code>
+		< hostname >:< port >:< weight >
+	</code>
+<p>When an address takes longer than <timeOut> milliseconds to respond, an error is recorded and the next address in the list is tried ConnAddressPoolConnet() will only return NULL if all addresses in the pool fail to respond.</p>
+
+<p>Hosts are sorted based on the value of the <weight> parameter.<p>
+<b>At the moment, bongo-antispam does not support multiple hosts.</b>

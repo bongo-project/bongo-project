@@ -1,0 +1,40 @@
+---
+layout: default
+title: Dragonfly Bongo 1.0 - Bongo
+---
+
+<h2>Requirements for Dragonfly : Bongo 1.0</h2>
+
+<p>The following are features that we probably need for Dragonfly to be a day-to-day usable mail client - that is the goal for 1.0. Other new features which would be nice to have, but involve substantive development, should be discussed before being added to the 1.0 requirements.</p>
+
+<p>At some point, these need to be prioritised in terms of the userbase they affect, and perhaps categorised in terms of difficulty of development.</p>
+<ul>
+	<li>Multilanguage support. At the moment Dragonfly is only available in English, but it's important to have a multilanguage interface. It should be easy to integrate good multilanguage support (gettext).</li>
+	<li>More conclusive error message reporting? It seems most Dragonfly errors result in failed login; more verbose messages would be useful.</li>
+	<li>Timezone issues. There do seem to be parts of the UI - e.g., the week ahead on the summary page - which suffer from timezone memory loss, and display the wrong time .</li>
+	<li>Preferences. Users should be able to set various preferences:
+		<ul>
+			<li>Timezone</li>
+			<li>Name/Email address</li>
+			<li>change their password</li>
+		</ul>
+	</li>
+	<li>A better Composer. In particular:
+		<ul>
+			<li>support for line-wrapping, quoting, and that kind of thing in the text area</li>
+			<li>better integration with contacts lookup? Use case: I want to mail twenty of my friends, some kind of multiple-select thing would be nice</li>
+			<li>multiple From: ?</li>
+		</ul>
+	</li>
+	<li>Reply to list? We have other mailing list support...</li>
+	<li>"This is me" is slightly goofy</li>
+	<li>Better contacts.
+		<ul>
+			<li>From:, CC: etc. entries should be easily added to the Addressbook, maybe some autolearn function like Tbird?</li>
+			<li>Make a group option so the user can group their contacts ( in a ldap addressbook is this ok?) so user can mail it's Department or it's colleagues like a mailling-list.</li>
+		</ul>
+	</li>
+	<li>"Send feedback" shouldn't go to Novell any more... -> maybe a bongo-feedback ml?</li>
+	<li>"Search" should work over calendar items</li>
+	<li>Sharing of calendars and inboxes so resources (like departments, meeting rooms etc) can share their calender and mail across groups of people</li>
+</ul>

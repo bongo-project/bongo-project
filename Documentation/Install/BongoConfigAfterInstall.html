@@ -1,0 +1,29 @@
+---
+layout: default
+title: Bongo Config After Install - Bongo
+---
+<h1>Bongo Config After Install</h1>
+
+Once you have <a href="{url}}/Documentation/Install/Install.html">installed Bongo</a>, you must configure it by following the instructions below:
+
+<h2>bongo-setup</h2>
+
+Run <code>bongo-setup</code> (note this needs to be run with root privileges):
+
+<pre>$prefix/sbin/bongo-setup</pre>
+
+<code>bongo-setup</code> has a number of options. You can change the ports where services will be started and configure Bongo to run against a corporate directory. By default, Bongo will be configured to run SMTP, IMAP, and POP3 on their standard ports.
+<ol>
+	<li>When asked "''Which driver would you like to use for the directory?''", although there is a <code>file</code> option, to allow running without an LDAP server, it's advised to use the <code>managed-ldap</code> option: that works much better, and you may encounter odd bugs otherwise. '''Note''': This needs the <code>slapd</code> package installed.</li>
+	<li>You should accept the default for the question "''Enter file for importing objects:''" unless you know what you're doing here.</li>
+	<li>When asked ''Enter domain name on which to run bongo [localhost.localdomain]:'' one should enter the domain without any prefixes like <code>www.</code> or <code>mail.</code>. Examples of correct domain names are: <code>bongo-project.org</code>, <code>debian.org</code> and <code>berlios.de</code>.</li>
+	<li>You should not be alarmed at the "''ERROR: Could not add attribute bongoDomain''" message. This always occurs.</li>
+</ol>
+
+<h2>bongomanager</h2>
+
+Run <code>bongomanager</code> (as root), which takes no arguments.
+
+<pre>$prefix/sbin/bongomanager</pre>
+
+<p>Bongo is now running! You will now need to add a new user to continue, so [[Commands/bongo-admin|continue to the next step]] to do so.</p>
