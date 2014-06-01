@@ -1,0 +1,50 @@
+---
+layout: default
+title: Directory Structure - Bongo
+---
+
+<h1>The Directory Structure</h1>
+<p>The following table lists the Bongo directory structure. In the table, <b><code>$prefix</code></b> defaults to <code>/usr/local</code>. It can be changed by specifying <code>--prefix=pathname</code> in the <code>autogen.sh</code> script.</p>
+
+<table class="faq-table">
+	<tr>
+		<td>Binary Directories</td>
+		<td><code>$prefix/bin</code>, <code>$prefix/sbin</code></td>
+	<tr/>
+	<tr>
+		<td>Log Directory</td>
+		<td><code>$prefix/var/log/messages</code></td>
+	</tr>
+	<tr>
+		<td>Mailbox Directory</td>
+		<td><code>$prefix/var/bongo/users/username</code></td>
+	</tr>
+	<tr>
+		<td>SCMS Directory</td>
+		<td><code>$prefix/var/bongo/scms</code></td>
+	</tr>
+	<tr>
+		<td>Message Queue</td>
+		<td><code>$prefix/var/bongo/spool</code></td>
+	</tr>
+	<tr>
+		<td>Certificates</td>
+		<td><code>$prefix/var/bongo/dbf</code></td>
+	</tr>
+	<tr>
+		<td>WebAdmin Certificates</td>
+		<td><code>$prefix/sbin</code></td>
+	</tr>
+	<tr>
+		<td>Startup Commands</td>
+		<td><code>/etc/init.d/bongo start</code></td>
+	</tr>
+	<tr>
+		<td>Stop Commands</td>
+		<td><code>/etc/init.d/bongo stop</code></td>
+	</tr>
+	<tr>
+		<td>Template Directory</td>
+		<td><code>$prefix/lib/modweb</code></td>
+	</tr>
+</table>

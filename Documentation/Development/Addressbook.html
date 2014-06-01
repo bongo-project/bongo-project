@@ -1,0 +1,24 @@
+---
+layout: default
+title: Addressbook - Bongo
+---
+<h1>Addressbook</h1>
+<h2>Overview</h2>
+
+<p>Being an e-Mail/Calendaring application, Bongo needs to be able to store and share contact information for users.  The idea is to allow users the ability to share their contacts using the most common and accepted formats.  To date the main ones appear to be VCF, LDIF and CSV.</p>
+
+<h2>Basic Ideas</h2>
+
+<p>By using the above formats we should be able to share contacts with the majority of desktop clients on all platforms - Thunderbird, Outlook, Evolution, Outlook Express and Claws-Mail being the initial focus.</p>
+<p>Initially we need an export of each client's supported format, but only if it is complete e.g., if Outlook exports csv and ldif, but the ldif doesn't have all the info of the contacts, then we don't care too much for it's ldif support.  This way each client should have at least one supported format.</p>
+
+<h2>Implementation Ideas</h2>
+
+<p>Initially all import/export work is done via the commandline with <tt>bongostore-tool</tt>, but hopefully a Dragonfly interface will enable users to do it in a friendly environment.  There will need to be several options with little hints so users know which file type is best to use:<p>
+ <br>*If exporting to Thunderbird, please select LDIF or CSV formats.
+ <br>*If importing from Outlook Express, please select CSV or VCF.
+
+
+<h2>Complexity</h2>
+
+<p>One of the biggest problems is that each of the clients handle the fields of a contact differently on an import and export.  This leads to garbled contact information when moving contacts from client<-->client or even client<-->bongo.</p>
