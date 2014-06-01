@@ -1,0 +1,43 @@
+---
+layout: default
+title: Protocol Descriptions - Bongo
+---
+
+<h2>iCalendar</h2>
+<p>The iCalendar protocol provides a common format for openly exchanging calendaring and scheduling information across the Internet. Applications that support the iCalendar provide interoperable calendaring and scheduling services for the Internet. 
+Bongo supports iCalendar RFC 2445 and 2447. Consequently, you can use Bongo calendaring functions such as calendar events, tasks, notes, and even busy searches, with any iCalendar compliant application.</p>
+
+<h2>IMAP4 ACL Extension</h2>
+<p>Bongo  supports IMAP4 ACL Extensions so users can now create, grant rights, subscribe to, and access shared folders in any mail client that supports the IMAP4 ACL Extension.</p>
+
+<h2>HTTP</h2>
+<p>HyperText Transport Protocol (HTTP) support allows users to access their mailboxes from any standard Web browser. HTTP support also enables Web-based administration. System administrators can manage Bongo user and messaging configurations from any standard Web browser.</p>
+
+<h2>LDAP</h2>
+<p>Lightweight Directory Access Protocol (LDAP) is an address book protocol. It enables applications to access a directory service, such as OpenLDAP, Novell<sup>&reg;</sup> eDirectory<sup><small>TM</small></sup>, Netscape Directory Server, Microsoft Active Directory*, or one of the many Web-based address books, to locate organizations, individuals, or any other resource within that directory.</p>
+<p>LDAP compatibility means that you can integrate Bongo with any LDAP-compliant mail client to give users access to address book information in an LDAP-compliant directory. Bongo also enables users to access any LDAP compliant address book within Webmail or WebAccess.</p>
+<p>Bongo supports a read-only subset of LDAP3 enabling it to perform address book queries.</p>
+
+<h2>MIME and S/MIME</h2>
+<p>Bongo supports Multipurpose Internet Mail Extensions (MIME) for sending and receiving messages with rich content. </p>
+<p>Bongo also supports S/MIME v3 for messages that are signed or encrypted with x.509 keys and certificates.</p>
+<p><b>NOTE:&nbsp;&nbsp;</b>The Modular Web Agent does not support S/MIME v3. </p>
+
+<h2>NMAP</h2>
+<p>Networked Messaging Application Protocol (NMAP) is an RFC-style protocol used to access user mailboxes and message queues in the Bongo messaging system.</p>
+<p>You can integrate additional functions such as fax, voice mail, and list servers with Bongo using NMAP-compliant applications.</p>
+
+<h2>POP3 and IMAP4</h2>
+<p>Supporting both Post Office Protocol 3 (POP3) and Internet Mail Access Protocol 4 (IMAP4) standards, Bongo is compatible with any client e-mail application including Evolution<sup><small>TM</small></sup>, Mozilla Thunderbird, GroupWise<sup>&reg;</sup>, Microsoft Outlook Express, Netscape Communicator, Eudora, Pegasus, and other integrated or standalone e-mail clients.</p>
+
+<h2>SMTP</h2>
+<p>Bongo supports Simple Mail Transfer Protocol (SMTP), a protocol used to transfer messages from server to server. Because Bongo supports SMTP, it is compatible with e-mail servers on the Internet and most TCP/IP systems, thereby providing native SMTP/IP routing.</p>
+
+<h2>SSL</h2>
+<p>Bongo protects system integrity by supporting the Secure Sockets Layer (SSL) 3.1 protocol. Using SSL 3.1, Bongo secures e-mail transmissions, remote administration, and user authentication over the Internet. Bongo supports SSL on all protocols including POP3, IMAP4, SMTP, and HTTP. SSL was originally created by Netscape and, although it has become a de facto Internet standard, it is not an RFC standard.</p>
+<p><b>NOTE:&nbsp;&nbsp;</b>SSL does not encrypt actual messages. Messages are encrypted using X.509 client certificates. These certificates are not installed or managed at the server level; you must install them through the e-mail client. For more information on installing X.509 client certificates, contact your e-mail client vendor.</p>
+
+<h2>TLS</h2>
+<p>TLS is the official Internet standard for transport encryption. TLS can run on the native or SSL ports for any supported protocol. Bongo allows POP, IMAP, and HTTP mail clients that support TLS to automatically switch into encrypted mode without switching ports. </p>
+<p>Because TLS advertises itself in the initial SMTP exchange, mail servers that support TLS also have the ability to automatically switch into encrypted mode. If TLS is configured, Bongo messaging servers automatically switch into encrypted mode when communicating with other mail servers that support TLS.</p>
+<p><b>NOTE:&nbsp;&nbsp;</b>TLS does not encrypt actual messages. Messages are encrypted using X.509 client certificates. These certificates are not installed or managed at the server level; you must install them through the e-mail client. For more information on installing X.509 client certificates, contact your e-mail client vendor.</p>
