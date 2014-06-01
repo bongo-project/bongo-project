@@ -1,0 +1,35 @@
+---
+layout: default
+title: Glossary - Bongo
+---
+<h1>Glossary</h1>
+<ul>
+	<li><a href="{{url}}/Documentation/AdministrationGuide/BongoConfig.html">bongo-config</a></li>
+	<li><a href="{{url}}/Documentation/AdministrationGuide/BongoManager.html">bongo-manager</a></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+</ul>
+
+__NOTOC__
+
+<h3>Agent</h3>
+<a href="{{url}}/Documentation/Development/Agent.html">Agents</a>
+<p>A standalone piece of software in Bongo, similar to a Unix daemon. Agents in Bongo tend to be very specialised and light-weight compared to their Unix counterparts: for example, a Unix MTA may speak SMTP, run a mail queue and deliver mail. In Bongo, that is separated into three separate agents.</p>
+
+<h3>Dragonfly</h3>
+
+<p>The web user interface for mail and calendaring.</p>
+
+<h3>Hawkeye</h3>
+
+<p>The web user interface for administration and configuration.</p>
+
+<h3>MDB</h3>
+
+<p>The initial releases of Bongo used a system called MDB to authenticate users, store software configuration, and for other tasks. This is now removed, but may still be referred to in places.</p>
+
+<h3>NMAP</h3>
+
+<p>An old name for the protocol that Bongo used to speak. NMAP is still referred to in the documentation and code in places. What was NMAP is now split between two separate agents, the Store and Queue.</p>

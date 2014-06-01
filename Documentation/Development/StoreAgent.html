@@ -1,0 +1,20 @@
+---
+layout: default
+title: Store Agent - Bongo
+---
+
+<h1>Overview of the Store </h1> 
+
+<p>The store is probably the most important part of Bongo. This document is an attempt at an introduction to the design of the store.</p>  
+
+<h2>The role of the Store</h2>
+
+<p>The store is basically the document repository for the entire system. It takes the role of the mail spool in tradtional UNIX mail setups, but also holds calendar items, contacts, etc. It also implements a fine-grained access control system, to ensure security and facilitiate sharing.</p>
+
+<h2>The internal design</h2>
+
+<p>The Store is closely modelled on a traditional filesytem, but with slight specialisations.</p> 
+
+<img src="/images/Store-design.png" alt="Store Design Image">
+
+<p>At the "root" of this filesystem are "stores", and in general, each store represents a single user (usually named after them).</p>

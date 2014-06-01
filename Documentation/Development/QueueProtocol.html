@@ -1,0 +1,121 @@
+---
+layout: default
+title: Queue Protocol - Bongo
+---
+
+<div class="warning-alpha">
+This Guide is very basic and not very complete. I would appreciate any and all help fleshing it out!
+</div>
+
+<h1>Queue Protocol</h1>
+
+The Bongo Queue is a set of mail spools, numbered, through which mail passes before it finally arrives at the Bongo Store.
+
+It is run by the Queue Agent, and other agents may register with this agent in order to see mail as it passes through.
+
+
+<h2>Session Commands</h2>
+
+<h3>AUTH</h3>
+<strong>Description</strong>: Verifies the system password and enables manager level access for the client.
+<br><strong>Syntax</strong> AUTH <md5 hash of system password>
+<br><strong>Response</strong> none
+
+<strong>Results</strong> 
+	<ol>
+		<li>1000 OK</li>
+		<li>3242 Bad Authentication</li>
+	</ol>
+<strong>Example</strong>
+   <pre> AUTH 0376AF4B57CE88147693730583947830
+    1000 OK</pre>
+
+<h3>PASS SYS</h3>
+<strong>Description</strong>: Verifies the system password and enables manager level access for the client. 
+<br><strong>Restrictions</strong>: none
+
+<br><strong>Syntax</strong>: PASS SYS <password>
+
+
+<h3>PASS USER</h3>
+<strong>Description</strong>: Verifies the user's password, adds the IDENTITY flag to the client session, and binds the userid to the session.
+<br><strong>Restrictions</strong>: 
+
+<br><strong>Syntax</strong>: PASS USER <username> <password>
+
+<br><strong>Response</strong>: none
+
+<br><strong>Results</strong>: 
+	<ol>
+		<li>1000 OK</li>
+		<li>3010 Invalid Arguments</li>
+		<li>3242 Bad Authentication</li>
+	</ol>
+
+<br><strong>Example</strong>:
+    <pre>
+    auth user john bongo
+    1000 OK
+	</pre>
+
+<h3>QUIT</h3>
+
+<strong>Description</strong>: Causes the server to close the current connection and clean up resources associated with it.
+
+<br><strong>Restrictions</strong>: none
+
+<br><strong>Syntax</strong>: QUIT
+
+<br><strong>Response</strong>: none
+
+<br><strong>Results</strong>: 
+	<pre>1000 OK</pre>
+<strong>Example</strong>:
+    <pre>
+    QUIT
+    1000 OK Signing Off
+	</pre>
+
+<h3>QWAIT</h3>
+
+<h3>QFLUSH</h3>
+
+<h2>Queue Commands</h2>
+<ol>
+	<li>QADM</li>
+	<li>QADDQ</li>
+	<li>QABRT</li>
+	<li>QBODY</li>
+	<li>QBRAW</li>
+	<li>QCOPY</li>
+	<li>QCREA</li>
+	<li>QDELE</li>
+	<li>QDSPC</li>
+	<li>QGREP</li>
+	<li>QHEAD</li>
+	<li>QINFO</li>
+	<li>QMOD FROM</li>
+	<li>QMOD FLAGS</li>
+	<li>QMOD LOCAL</li>
+	<li>QMOD MAILBOX</li>
+	<li>QMOD RAW</li>
+	<li>QMOD TO</li>
+	<li>QMIME</li>
+	<li>QMOVE</li>
+	<li>QRCP</li>
+	<li>QRETR</li>
+	<li>QRTS</li>
+	<li>QRUN</li>
+	<li>QSRCH DOMAIN</li>
+	<li>QSRCH HEADER</li>
+	<li>QSRCH BODY</li>
+	<li>QSRCH BRAW</li>
+	<li>QSTOR ADDRESS</li>
+	<li>QSTOR CAL</li>
+	<li>QSTOR FLAGS</li>
+	<li>QSTOR FROM</li>
+	<li>QSTOR LOCAL</li>
+	<li>QSTOR MESSAGE</li>
+	<li>QSTOR RAW</li>
+	<li>QSTOR TO</li>
+</ol>

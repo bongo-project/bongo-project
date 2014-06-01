@@ -1,0 +1,76 @@
+---
+layout: default
+title: Aliasing - Bongo
+---
+<h1>Aliasing</h1>
+
+<h2>Description</h2>
+<p>Aliasing and domain validation happen within the queue agent in the Bongo architecture.  Agents that require user domain validation (currently just SMTP) will query the queue agent for valid domains and users.  The queue protocol currently provides one command that servers both functions, [[Documentation/Queue_Protocol#ADDRESS_RESOLVE]].</p>
+
+<h2>Store Contents</h2>
+<p>The configuration is stored in separate sections of the store _system user.  The first is in </p>
+
+<pre>
+list /config
+2001 000000000000001a 7 0 0000000c 1247197403 962 /config/queue
+</pre>
+
+<p>This store document, like most others, is a json formatted data object.  The queue object has lots of properties, but for this discussion we need only focus on the "domains" property.  This property is an array of strings each representing valid domains which this Bongo installation services.  For example: <p>
+
+<pre>
+read /config/queue
+2001 nmap.document 962
+{
+  "domains": ["bongo-test.info","some-other-domain.com"]
+}
+</pre>
+
+Each domain configured in the array must have a file in
+<pre>
+list /config/aliases
+2001 0000000000000012 7 0 00000001 0 113 /config/aliases/default_config
+2001 000000000000001e 7 0 00000002 0 118 /config/aliases/bongo-test.info
+2001 0000000000000028 1 0 00000004 0 127 /config/aliases/some-other-domain.com
+1000 OK
+</pre>
+
+The default_config is just that, a skeleton used when new domains are created.  It currently looks like:
+<pre>
+read /config/aliases/default_config
+2001 nmap.document 113
+{
+    "domainalias" : "",
+    "aliases" : { 
+        "postmaster" : "admin" 
+    },
+    "username-mapping" : 0
+}
+</pre>
+
+<h2>Domain Alias Confiugration</h2>
+
+<h3>Username Mapping Mode</h3>
+Email addresses contain two general parts; what we will call local and domain, where an email address is formatted like local@domain.  There are three possible modes that a domain can choose to influence how the system looks up usernames in the user store.
+
+* 0: username == local
+* 1: username == local@domain
+* 2: username == domain
+
+<h3>Domain Aliasing</h3>
+Bongo allows for an entire domain to be aliased to another domain allowing for a single set of users mapped onto multiple domains. Setting "domainalias" does this.
+<pre>
+{
+  "domainalias":"yet-another-domain.org"
+}
+</pre>
+will rewrite local@domain to local@yet-another-domain.org
+
+<h3>User Aliases</h3>
+User aliasing is also possible using the "aliases" object.  Each property key and value are user objects.  This will rewrite the local portion of the email address
+<pre>
+{
+  "aliases" : {
+    "postmaster" : "admin"
+}
+</pre>
+will rewrite postmaster@domain to admin@domain

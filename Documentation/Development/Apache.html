@@ -1,0 +1,25 @@
+---
+layout: default
+title: Apache - Bongo
+---
+
+<h1>Apache</h1>
+<p>If you have built Bongo from source, an example Apache configuration
+snippet is created in <code>src/www/hula.conf</code>. This can be dropped directly
+into Apache's vhosts.d directory, though it will override the root url
+path (<code>DocumentRoot</code>) of your Apache configuration. Unless you only want
+to run Hula on that server, you'll want to modify the <code>hula.conf</code> file.</p>
+
+<p>If you look at that file, you'll see that it defines two locations.
+The first, <code>< Location / ></code>, serves the static files in Hula's htdocs
+directory. This location can be put elsewhere in your url space.</p>
+
+<p>The second, <code>< Location /user ></code>, cannot be changed. The [[Dragonfly]]
+client currently hits <code>/user</code> for downloading all its data. It wouldn't
+be unreasonable to submit a patch that changes the client to use a
+path relative to the <code>dragonfly.html</code> file.</p>
+
+<p>Anyway, for testing things out, you should just be able to drop the
+<code>hula.conf</code> file into place and restart Apache. Review the <a href="{{url}}/Documentation/Development/Troubleshooting.html">Troubleshooting</a> section below if you're having problems logging in.</p>
+
+<p>Once this is done, you can move onto [[{{BASEPAGENAME}}#Dragonfly|the next section]].</p>
