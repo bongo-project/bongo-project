@@ -1,0 +1,53 @@
+---
+layout: default
+title: Crystal - Bongo
+---
+
+<h1>Crystal</h1>
+
+<p>Crystal is the codename for the new web user interface for Bongo, which is yet to begin development. It is the intended successor of the <a href="{{url}}/Documentation/Development/Dragonfly.html">Dragonfly</a> web interface.</p>
+
+<p>At this stage, not much information regarding this new web interface exists. The following items will have to be resolved before design begins:</p>
+<ol>
+	<li>Where the component fits into the project timeline.</li>
+	<li>Who will be working on the project.</li>
+	<li>Who the target user group will be.</li>
+</ol>
+
+<p>Feature development on <a href="{{url}}/Documentation/Development/Dragonfly.html">Dragonfly</a> will probably stop after M3, and patches will be provided until the interface is removed, and possibly backported where necessary. The majority of the web interface work will shift away from Dragonfly and onto <a href="{{url}}/Documentation/Development/Hawkeye.html">Hawkeye</a> and Crystal.</p>
+
+<h2>History</h2>
+
+<p>Due to the poor design and implementation of <a href="{{url}}/Documentation/Development/Dragonfly.html">Dragonfly</a>, it was suggested that a new web user interface be written from the ground up eventually replace it. The name ''Crystal'' was suggested by Alex Hixon.</p>
+
+<h2>Development</p>
+
+<p>The following people has volunteered to code on the project: Alex Hixon. Alex Hudson will be working on the high-level design, and act as a general mentor for the component.</p>
+
+<h3>Roadmap<h3>
+
+<p>No roadmap is available for Crystal at this stage.</p>
+
+<h3>Technical documents</h3>
+
+No technical documents are available for Crystal at this stage.
+
+<h2>Features<h2>
+
+<p>At this stage a proper list of features has not been finalised, however, the following list reflects what the general idea for Crystal represents at the current time:</p>
+<ol>
+	<li>Very basic core, consisting of interfaces, extensible API, GUI framework/skeleton and some glue, as well as a plugin loader. </li>
+	<li>Basic package would contain 'calendar', 'mail', 'contact' and 'summary' plugins, for example. See the section below titled ''Core plugins'' for more information.</li>
+	<li>Data providers would be able to plug into both the client and server sides (eg Google Maps provider for calendar 'location' fields and context-tooltips in emails; IM plugin for contacts when viewing an email).</li>
+</ol>
+
+<h2>Core plugins</h2>
+
+<p>As Crystal is modular in design, the core of Crystal would only contain the interfaces and API, as well as a GUI skeleton. The following plugins would be available together with the core Crystal release to provide some sort of functionality to the end user:</p>
+<ol>
+	<li>Mail</li>
+	<li>Calendar</li>
+	<li>Summary</li>
+	<li>Contacts</li>
+	<li>Instant Messaging</li>
+</ol>
