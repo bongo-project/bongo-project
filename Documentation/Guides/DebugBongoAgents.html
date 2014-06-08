@@ -1,0 +1,41 @@
+---
+layout: default
+title: template - Bongo
+---
+<h1>Debugging Bongo agents</h1>
+
+<h2>A quick debugging guide</h2>
+
+<p>First and foremost, in order to debug part of Bongo effectively, you need a debug build. In general, packaged Bongo isn't suitable for this.
+
+<p>Compiling from source, I often start like this:
+	<br>
+<code>
+   CFLAGS="-ggdb -O0" ./autogen.sh --prefix=/tmp/bongo-build
+</code>
+<p>You can set the build anywhere; I generally put testing builds in /tmp/ just because it's self-contained and I can install as my user - I don't need to be root. The CFLAGS part is important, though - you need "-ggdb" to include the debugging information in the binaries. Without this, you'll find it impossible to debug them effectively.</p>
+
+<h3>Debugging Agents</h3>
+
+<p>Agents are the simplest thing to debug. However, they do need "infrastructure" running. In particular, they need to be able to access the MDB configuration and server, and the store.</p>
+
+<p>Usually, I will start by running "bongo-manager" in a terminal, on it's own, without allowing it to daemonize. </p>
+
+<p>Once this is running, you should stop the agent you intend to debug (you can obviously skip this step if your agent is crashing ;). I usually "pkill bongosmtp" (change the agent name to suit).</p>
+
+<p>Now you have bongo-manager running, but not the agent you want to debug. Now you can start debugging:</p>
+<code>
+   gdb /tmp/bongo-build/sbin/bongosmtp
+</code>
+<h3>Various gdb tips</h3>
+
+<p>Ideally, you need to know how to drive gdb. But as a quick overview, you basically type in commands at the prompt to control the program:</p>
+<ol>
+	<li>break name - set a breakpoint at function name()</li>
+	<li>r - run the program</li>
+	<li>n - run the next instruction / function</li>
+	<li>s - run and step into the next instruction / function (if you're in a breakpoint)</li>
+	<li>print var - output the value contained in var</li>
+	<li>c - continue normal execution after a break</li>
+	<li>bt - print the stack trace; very useful after a crash</li>
+</ol> 

@@ -1,0 +1,142 @@
+---
+layout: default
+title: Crystal tech Detail - Bongo
+---
+<h1>Client-side API</h1>
+
+<h2>Classes</h2>
+<h3>DataQuery</h3>
+<p>DataQuery is basically a simple wrapper around a XMLHttpRequest, that handles URL structure, error handling and caching transparently.</p>
+
+<h3>Constructor</h3>
+
+<h3>Exceptions</h3>
+
+<h3>Example</h3>
+<pre>
+ var q = new DataQuery ("mail", [[Documentation/Crystal/SessionInfo|session]], { mailbox: "INBOX" };
+ q.dataComplete = function (msg) { alert (msg); };
+ q.dataFailure = function (code, msg) { alert ("Error occured: (" + code + "): " + msg); };
+ q.run (); // run worker async
+</pre>
+
+<h2>HandshakeRequest</h2>
+
+HandshakeRequest manages and initialises a new remote session via the [[Documentation/Crystal/SessionInfo|SessionInfo]] object.
+
+<h3>Constructor</h3>
+
+ <code>new HandshakeRequest (user, handler, [password])</code>
+
+
+<table class="faq-table">
+	<th>Name</th>
+	<th>Type</th>
+	<th>Required</th>
+	<th>Description</th>
+	<tr>
+		<td>user</td>
+		<td>String</td>
+		<td>Yes</td>
+		<td>Username, email or similar field used to pass to the authentication provider.</td>
+	<tr/>
+	<tr>
+		<td>handler</td>
+		<td>String</td>
+		<td>Yes</td>
+		<td>Authentication provider on the server to use. Examples include 'store', 'openid', and so on.</td>
+	<tr/>
+	<tr>
+		<td>Password</td>
+		<td>String</td>
+		<td>No</td>
+		<td>Either plain-text or hashed password to be passed to the authentication provider along with the username. Not required by all authentication providers.</td>
+	<tr/>
+</table>
+
+<h2>Properties</h2>
+
+<h3>authSuccessful</h3>
+'''Type:''' Function<br />
+'''Default:''' null
+
+<p>Function to run when the handshake has completed and run without fail. The function will be run with a single argument, the [[Documentation/Crystal/SessionInfo|SessionInfo]] object for the newly created session.</p>
+
+<h3>authFailure</h3>
+'''Type:''' Function<br />
+'''Default:''' null
+
+<p>FFunction to be run when the handshake failed on the server. This is generally ''not'' a web exception; use the <code>requestFailure</code> property for that purpose. This function will be called with two arguments, the error code, followed by the error message (en_US only). Please base internationalisable error messages off the error code, rather than the message returned; it should only be used for debugging/testing.</p>
+
+<h3>requestFailure</h3>
+'''Type:''' Function<br />
+'''Default:''' null
+
+<p>FFunction to be run when the data query encounters an error. This can be assumed to be a web-related exception. The function will be called with the same arguments as run by MooTools's Request onFailure event. See http://docs12b.mootools.net/Request/Request#Request:events for more information.</p>
+
+<h2>Methods</h2>
+
+<h3>run ()</h3>
+
+'''Returns:''' nothing
+
+<p>FRuns the current HandshakeRequest instance asynchronously. Calls authComplete when the user has been successfully authenticated and a new session created, and authFailure if there was an authentication error.</p>
+
+<h2>Example</h2>
+<code>
+ var a = new HandshakeRequest ("rupert", "store", "mypassword");
+ a.authSuccessful = onAuthComplete;
+ a.run ();
+</code>
+
+
+<h2>Data types</h2>
+<h3>SessionInfo</h3>
+
+TODO
+
+<h3>Properties</h3>
+
+<h4>user</h4>
+'''Type:''' String<br />
+'''Default:''' null
+
+Username associated with session.
+
+<h4>uid</h4>
+'''Type:''' Integer<br />
+'''Default:''' -1
+
+Current session ID.
+
+<h4>authprovider</h4>
+'''Type:''' String<br />
+'''Default:''' null
+
+Authentication provider name associated with this session instance.
+
+<h4>cache</h4>
+'''Type:''' [[Documentation/Crystal/Cache|Cache]]<br />
+'''Default:''' null
+
+Current cache instance.
+
+<h3>Methods</h3>
+
+<h4>close ()</h4>
+
+'''Returns:''' Boolean
+
+Does nothing for the moment. <code>:)</code>
+
+<h3>Example</h3>
+
+ TODO!
+
+<h3>Data Transport</h3>
+
+TODO.
+
+<h3>Server-side API</h3>
+
+See <a href="{{url}}/Documentation/Development/Avocado.html">Avocado</a> for more information.
