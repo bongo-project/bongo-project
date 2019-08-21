@@ -4,7 +4,7 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}all.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/all.css" media="screen" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -18,19 +18,19 @@
    	    			<div class="left">
    	    				<ul>
    	    					<li><a href="/">Home</a></li>
-                            <li>|</li>
-                            <li><a href="http://planet.bongo-project.org/">Blogs</a></li>
-                            <li>|</li>
-                            <li><a href="{{url}}/Documentation/Development.html">Developers</a></li>
-                        </ul>
-                    </div>
-                </div>
-<!-- /Navigation -->
-                <div id="logo">
-                	<a href="/" title="Main Page"><img src="{{url}}/images/bongo.png" alt="Bongo Project" /></a>
-                </div>
-                <div id="categories">
-                	<h1>Main Page</h1>
-                </div>
+                  {% comment %} <li>|</li>
+                  <li><a href="http://planet.bongo-project.org/">Blogs</a></li> {% endcomment %}
+                  <li>|</li>
+                  <li><a href="{{url}}/Documentation/Development.html">Developers</a></li>
+                </ul>
+              </div>
             </div>
+<!-- /Navigation -->
+            <div id="logo">
+              <a href="/" title="Main Page"><img src="{{url}}/images/bongo.png" alt="Bongo Project" /></a>
+            </div>
+            <div id="categories">
+              <h1>Main Page</h1>
+            </div>
+          </div>
         </div>
