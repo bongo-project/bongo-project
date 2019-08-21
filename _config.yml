@@ -5,7 +5,7 @@ description: "Bongo is an easy-to-use mail and calendar system, offering a simpl
 url: "bongo-project.org"
 markdown: redcarpet
 permalink: /:title
-highlighter: pygments
+highlighter: rouge
 plugins:
   - jekyll-sitemap
   - jekyll-feed
