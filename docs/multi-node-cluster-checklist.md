@@ -8,6 +8,12 @@ source: https://github.com/bongo-project/bongo/blob/main/docs/multi-node-cluster
 {% raw %}
 # Multi-node cluster pre-flight checklist
 
+Status: multi-node clusters are in planning. The base is in the product: Raft
+consensus for all writes, gossip membership, blob sync between nodes, mutual
+TLS for the Raft transport, gossip encryption, and the startup check described
+below. Bongo is deployed and tested as a single node. This checklist records
+what a cluster requires before it is formed.
+
 The shipped deployment is a **single node**: one `server`-role process that only
 ever talks to itself (`advertise_addr = 127.0.0.1`, no peers). In that mode raft
 and gossip bind to loopback only, whatever `bind_addr` says, so they are not
