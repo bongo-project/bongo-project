@@ -1,0 +1,51 @@
+---
+layout: history
+title: "FAQ"
+history_group: about
+redirect_from:
+  - /Documentation/Frequently_Asked_Questions.html
+---
+{% raw %}
+			    <div lang="en" dir="ltr">
+				<h1><span>Frequently Asked Questions </span></h1>
+				<h2><span> General Topics </span></h2>
+					<h3><span> What is Bongo? </span></h3>
+						<p>Bongo is the name of the software we're developing which includes a server-side e-mail and calendaring server, and a web GUI for accessing your e-mail and calendar.
+						</p>
+					<h3><span> Who will Bongo appeal to? </span></h3>
+						<p>Our initial releases will be aimed at quite a narrow range of users. We are not targeting the "groupware" or "enterprise" markets: there are already many projects attempting to replace Exchange and Notes; we are not that project. 
+						</p>
+					<p>We see our main deployment targets initially as hobbyist home users, small office/home office situations and small/medium sized businesses (commonly referred to as SMEs).</p>
+						<p>We also hope that with our flexible architecture and open approach, many third parties will develop on top of Bongo for specific use cases, providing many extra features which don't come as standard. While we have no aspiration to be a "platform", we hope people will be able to achieve more by standing on our shoulders.
+						</p>
+					<h3><span> Why another mail/calendaring project? </span></h3>
+						<p>The aim of the project is provide a friendly, usable system for users, but also to allow people to collaborate in ways that they're currently not able to. We intend for Bongo to be invisible social glue.
+						</p>
+					<h3><span> How is this different to other projects? </span></h3>
+						<p>We're different in terms of both scope and technical design. We primarily intend a much more user-focussed experience: features will be governed less by corporate box-ticking, and more by results - it must make e-mail simpler or more useful.
+						</p>
+					<h3><span> What is this history of this project? </span></h3>
+						<p>This is an immediate descendant of the Hula project, which was a Novell-led project. Dissatisfied with the progress of the project, we "forked" when the future became extremely unclear - Novell had announced they were not committing further engineering resources to it.
+						</p>
+						<p>Hula was a descendant of the Netmail software produced by Novell, and that project along with the Netmail business was transferred to a company called Messaging Architects (MA). MA were early contributors to the Hula project, and former Hula engineers are now working for MA. We look forward to seeing how we can collaborate with them in the future.
+						</p>
+				<h2><span> Technical Topics </span></h2>
+					<h3><span> How is Bongo designed? </span></h3>
+						<p>Our technical design is very much influenced by traditional "UNIX" design principles. Although we provide an <i>integrated</i> system, it is very much modular. Individual protocols are implemented by "agents", and they are linked together by a common configuration and messaging system.</p>
+						<p>Bongo is written mainly in a mixture of C and Python, which makes it much more lightweight than many similar projects - you do not need a Java application server, for example.
+						</p>
+						<p>Virtually all parts of Bongo are "native": although we can interact with other software such as SpamAssassin and ClamAV for added functionality, the core parts of Bongo are not based on other projects.
+						</p>
+					<h3><span> Why doesn't Bongo use (Postfix/Exim/etc.)&#160;? </span></h3>
+						<p>There are two main reasons for this: the design of the system, and the heritage of the system. Bongo is descended from a line of other projects, and traditionally has provided all the pieces needed to run a mail server. Due to that heritage, components such as an SMTP server were already written and therefore there hasn't been a need to replace them with another choice.
+						</p>
+						<p>The design of Bongo is also very different, though. Traditional UNIX apps divide responsibilities in certain ways: for example, a Mail Transport Agent (MTA) is responsible for handling mail spools, the Delivery Agent (MDA) is responsible for user inboxes, etc. In Bongo, these divisions are much more fine-grained: for example, the software which handles mail queues does not speak SMTP, so it cannot be an MTA in the traditional sense.
+						</p>
+						<p>So it's actually not possible to simply replace part of Bongo with another piece of software: fundamentally, the parts just don't match. However, that's not to say that it's not possible to integrate Bongo into other software. As an example, if you already have a Postfix setup, you could quite easily continue to use that and use local SMTP delivery to send mail to Bongo.
+						</p>
+						<p><br />
+						</p>
+				<h2><span> Have a question not answered here? </span></h2>
+					<p>Feel free to ask us! Either send us a mail to bongo-users, or drop by on IRC.
+					</p>
+{% endraw %}

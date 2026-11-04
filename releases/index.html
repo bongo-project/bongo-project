@@ -1,0 +1,53 @@
+---
+layout: default
+title: Releases
+description: "Release notes for every Bongo release, newest first."
+---
+<div class="wrap releases">
+  <header class="page-head">
+    <h1>Releases</h1>
+    <p class="lead">Release notes for the Go reimplementation of Bongo, newest first. Each version links to its GitHub release, where the Linux amd64 and arm64 zips are published. Container images are published at <code>ghcr.io/bongo-project/bongo</code>.</p>
+    <p class="note">Versions 0.1 to 0.6 of the original C project (2007-2010) have their own release notes under <a href="{{ '/history/#release-notes' | relative_url }}">History</a>. The version numbers below belong to the Go project.</p>
+  </header>
+
+  <nav class="release-index" aria-label="Release versions">
+    <ul>
+      {%- for g in site.data.releases %}
+      <li><a href="#v{{ g.minor | replace: '.', '-' }}" class="mono">{{ g.minor }}</a></li>
+      {%- endfor %}
+    </ul>
+  </nav>
+
+  {%- for g in site.data.releases %}
+  {%- assign r = g.release %}
+  <section class="release" id="v{{ g.minor | replace: '.', '-' }}" aria-labelledby="h-{{ r.version | replace: '.', '-' }}">
+    <header class="release__head">
+      <h2 id="h-{{ r.version | replace: '.', '-' }}"><a href="{{ r.url }}">{{ r.version }}</a>{% if r.title != '' %}<span class="release__title">{{ r.title }}</span>{% endif %}</h2>
+      <p class="release__date"><time datetime="{{ r.date }}">{{ r.date | date: '%-d %B %Y' }}</time>{% if forloop.first %} <span class="badge">Latest minor</span>{% endif %}</p>
+    </header>
+    {%- if r.notes != '' %}
+    <div class="prose release__notes">{{ r.notes | markdownify }}</div>
+    {%- else %}
+    <p class="release__empty">No release notes were published with this tag.</p>
+    {%- endif %}
+    {%- if g.patches.size > 0 %}
+    <div class="patches">
+      <p class="patches__label">Patch releases</p>
+      {%- for p in g.patches %}
+      <details class="patch">
+        <summary><span class="mono">{{ p.version }}</span> <time datetime="{{ p.date }}">{{ p.date | date: '%-d %B %Y' }}</time>{% if p.title != '' %} <span class="patch__title">{{ p.title }}</span>{% endif %}</summary>
+        <div class="patch__body">
+          {%- if p.notes != '' %}
+          <div class="prose">{{ p.notes | markdownify }}</div>
+          {%- else %}
+          <p class="release__empty">No release notes were published with this tag.</p>
+          {%- endif %}
+          <p><a href="{{ p.url }}">{{ p.version }} on GitHub</a></p>
+        </div>
+      </details>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+  </section>
+  {%- endfor %}
+</div>

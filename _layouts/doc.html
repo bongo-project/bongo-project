@@ -1,0 +1,20 @@
+---
+layout: default
+---
+<div class="wrap docs">
+  <nav class="docs-nav" aria-label="Documentation">
+    <p class="docs-nav__title"><a href="{{ '/docs/' | relative_url }}">Documentation</a></p>
+    <ul>
+      {%- for d in site.data.docs %}
+      <li><a href="{{ d.url | relative_url }}"{% if page.url == d.url %} aria-current="page"{% endif %}>{{ d.title }}</a></li>
+      {%- endfor %}
+    </ul>
+    <p class="docs-nav__meta">Docs for {{ site.latest_release }}, copied from <a href="{{ site.repository_url }}/tree/main/docs">docs/</a> in the source repository.</p>
+  </nav>
+  <article class="prose docs-body">
+    {% include anchor-headings.html html=content %}
+    {%- if page.source %}
+    <p class="docs-source"><a href="{{ page.source }}">View this page's source on GitHub</a></p>
+    {%- endif %}
+  </article>
+</div>

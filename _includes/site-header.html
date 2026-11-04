@@ -1,0 +1,17 @@
+{%- assign path = page.url -%}
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="{{ '/' | relative_url }}" aria-label="Bongo Project home">
+      {% include logo.svg %}
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="{{ '/' | relative_url }}"{% if path == '/' %} aria-current="page"{% endif %}>Home</a></li>
+        <li><a href="{{ '/docs/' | relative_url }}"{% if path contains '/docs/' %} aria-current="page"{% endif %}>Documentation</a></li>
+        <li><a href="{{ '/releases/' | relative_url }}"{% if path contains '/releases/' %} aria-current="page"{% endif %}>Releases</a></li>
+        <li><a href="{{ '/history/' | relative_url }}"{% if path contains '/history/' %} aria-current="page"{% endif %}>History</a></li>
+        <li><a class="site-nav__ext" href="{{ site.repository_url }}">GitHub</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

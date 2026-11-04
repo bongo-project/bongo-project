@@ -1,23 +1,200 @@
 ---
-layout: front
-title: Welcome
+layout: default
+title: Bongo, a mail and calendar server
+description: "Bongo is a mail and calendar server. It runs as one Go binary and serves IMAP, SMTP, POP3, CalDAV, CardDAV and a web interface."
+body_class: home
 ---
-
-<div lang="en" dir="ltr" class="mw-content-ltr"><div class="welcome">
-  <h1> <span id="Welcome_to_Bongo">Welcome to <span style="color: #FF8C00; font-style:italic;">Bongo</span></span></h1>
-</div>
-<div class="welcome-msg">
-  <p><i>"Bongo is an easy-to-use mail and calendar system, offering a simple yet powerful user interface. The goal is to make sharing, organisation, and communication simpler, quicker, and more useful."</i></p>
-</div>
-  <div class="splits">
-    <div class="split-half" style="width:60%;">
-      <h3> <span class="mw-headline" id="What_is_Bongo.3F"> What is Bongo? </span></h3>
-      <p>We're creating fun and simple e-mail &amp; calendaring software. We want our inboxes to be usable again: e-mail should be a useful tool, not a productivity killer. We want to be able to use our calendars to organise our lives, and we want other people to be able to interact with us through it whether they use Bongo or not.</p>
-      <p>Although Bongo is a young project, the software itself has a long pedigree and we are simply amongst the latest custodians. But while the core code isn't new, the ideas we have and the direction we're taking are. We're not trying to create a "groupware" system to compete with well-known proprietary systems, or create an "enterprise platform" which encompasses everything from document management to project planning.</p>
-      <p>Best of all, Bongo is free (as in "freedom") software developed by an open community: we pride ourselves on being friendly and welcoming, and we see our project as being complementary to similar community projects.</p>
-      <h3> <span class="mw-headline" id="Sounds_good.21"> Sounds good! </span></h3>
-      <p>You're welcome to download Bongo, try it out, let us know what you think. We'd like you to get more involved, though! We welcome all feedback, and you don't need to be able to hack on code to talk to us.</p>
-      <p>We have an <a href="Documentation/Frequently_Asked_Questions.html" title="Frequently Asked Questions" class="mw-redirect"> F.A.Q</a>, of course, and a guide on how to <a href="https://github.com/bongo-project/bongo-project/wiki/Installation" title="Installation">install</a> - then you can find out about <a href="{{url}}/Documentation/GettingInvolved.html" title="Getting Involved">getting involved</a> and how to become part of the community!</p>
+{%- assign rel = site.latest_release -%}
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap hero__inner">
+    <p class="eyebrow"><span class="mono">{{ rel }}</span> <span aria-hidden="true">/</span> GNU AGPL v3.0 <span aria-hidden="true">/</span> Linux amd64 and arm64</p>
+    <h1 id="hero-title">A mail and calendar server in one Go binary.</h1>
+    <p class="lead">Bongo serves IMAP, SMTP, POP3, CalDAV and CardDAV, and has a web interface for mail, calendars, contacts and tasks. Its storage is embedded, so there is no separate database to run. Several servers form a cluster through Raft.</p>
+    <div class="actions">
+      <a class="btn btn--primary" href="{{ '/docs/install/' | relative_url }}">Install</a>
+      <a class="btn" href="{{ site.repository_url }}/releases/tag/{{ rel }}">Download {{ rel }}</a>
+      <a class="btn btn--quiet" href="{{ site.repository_url }}">Source on GitHub</a>
     </div>
   </div>
-</div>
+</section>
+
+<section class="section section--arch" aria-labelledby="arch-title">
+  <div class="wrap">
+    <div class="section__head">
+      <h2 id="arch-title">Architecture</h2>
+      <p>One process holds every protocol listener and all storage. The port numbers are the production defaults.</p>
+    </div>
+
+    <figure class="arch">
+      <div class="arch__main">
+        <ul class="pins" aria-label="Protocols and default ports">
+          <li><span class="pin__name">SMTP</span><span class="pin__port">25 465 587</span></li>
+          <li><span class="pin__name">IMAP</span><span class="pin__port">143 993</span></li>
+          <li><span class="pin__name">POP3</span><span class="pin__port">110 995</span></li>
+          <li><span class="pin__name">CalDAV</span><span class="pin__port">443</span></li>
+          <li><span class="pin__name">CardDAV</span><span class="pin__port">443</span></li>
+          <li><span class="pin__name">Web</span><span class="pin__port">443</span></li>
+        </ul>
+        <div class="chip">
+          <div class="chip__bar">
+            <span class="chip__name">bongo serve</span>
+            <span class="chip__meta">one statically linked binary</span>
+          </div>
+          <div class="chip__row chip__row--log">
+            <span class="chip__label">Raft log</span>
+            <span class="chip__text">Every write is a Raft command. The state machine applies it to Pebble.</span>
+          </div>
+          <div class="chip__tiers">
+            <div class="tier">
+              <span class="tier__name">Pebble</span>
+              <span class="tier__text">Metadata. The source of truth, replicated by Raft.</span>
+            </div>
+            <div class="tier">
+              <span class="tier__name">Blob store</span>
+              <span class="tier__text">Message bodies, named by SHA-256 and stored once.</span>
+            </div>
+            <div class="tier">
+              <span class="tier__name">SQLite + Bleve</span>
+              <span class="tier__text">Per-user indexes and full-text search, rebuilt from the above.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="arch__peers" aria-label="Cluster peers">
+        <span class="peers__link"><span class="mono">Raft 8300</span> <span class="mono">gossip 8301</span></span>
+        <div class="peer"><span class="mono">bongo</span> server 2</div>
+        <div class="peer"><span class="mono">bongo</span> server 3</div>
+      </div>
+      <figcaption>A cluster is three or five servers. A single server runs the same binary with no peers.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="features-title">
+  <div class="wrap">
+    <div class="section__head">
+      <h2 id="features-title">Features</h2>
+      <p>Bongo replaces a mail transfer agent, an IMAP server, a CalDAV server and a webmail client with one program.</p>
+    </div>
+    <div class="features">
+      <section class="feature" aria-labelledby="f-mail">
+        <h3 id="f-mail">Mail</h3>
+        <ul>
+          <li>SMTP for inbound mail, submission and relay through a smarthost</li>
+          <li>IMAP and POP3, with implicit TLS and STARTTLS</li>
+          <li>DKIM signing per domain; SPF and DMARC evaluation</li>
+          <li>MTA-STS and DANE for outbound TLS</li>
+          <li>Spam scoring with an optional Bayesian filter; optional ClamAV scanning</li>
+          <li>Filter rules, vacation replies and forwarding</li>
+          <li><code>bongo-import</code> for mbox, Maildir, .eml, IMAP and Thunderbird</li>
+        </ul>
+      </section>
+      <section class="feature" aria-labelledby="f-cal">
+        <h3 id="f-cal">Calendars and contacts</h3>
+        <ul>
+          <li>CalDAV and CardDAV for Apple Calendar, Thunderbird and other clients</li>
+          <li>Calendar sharing at free/busy, read or write level</li>
+          <li>Invitations by email (iMIP) and by CalDAV scheduling (RFC 6638)</li>
+          <li>Published calendars as iCalendar feeds; subscriptions to external feeds</li>
+          <li>Tasks (VTODO), rooms and equipment that answer booking requests</li>
+          <li>Email reminders</li>
+        </ul>
+      </section>
+      <section class="feature" aria-labelledby="f-admin">
+        <h3 id="f-admin">Domains and administration</h3>
+        <ul>
+          <li>Many domains on one server, each with its own DKIM key, catch-all, administrators and quota</li>
+          <li>Alias domains</li>
+          <li>A generated DNS record set per domain, with live status checks</li>
+          <li>Two-factor authentication with TOTP</li>
+          <li>Client autoconfiguration for Thunderbird, Outlook and Apple devices</li>
+        </ul>
+      </section>
+      <section class="feature" aria-labelledby="f-store">
+        <h3 id="f-store">Storage and clustering</h3>
+        <ul>
+          <li>No external database: Pebble, a blob store and per-user SQLite and Bleve indexes</li>
+          <li>Identical messages are stored once</li>
+          <li>Search indexes can be rebuilt from the stored data</li>
+          <li>A backup is the Pebble key space plus the blobs it references</li>
+          <li>Raft replication between three or five servers</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</section>
+
+<section class="section section--shots" aria-labelledby="shots-title">
+  <div class="wrap">
+    <div class="section__head">
+      <h2 id="shots-title">Web interface</h2>
+      <p>The web interface is server-rendered HTML with HTMX and Alpine.js. It has light and dark themes. The screenshots show a development server with test data.</p>
+    </div>
+    <div class="shots">
+      <figure class="shot shot--wide">
+        <img src="{{ '/assets/screenshots/inbox-light.webp' | relative_url }}" width="1440" height="900" loading="lazy" decoding="async"
+             alt="Bongo web mail in the three-pane layout: a folder list on the left, the inbox with eleven messages in the middle, and the message 'Team offsite planning' from bob@localhost open on the right.">
+        <figcaption>Mail, three-pane layout</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="{{ '/assets/screenshots/calendar-month.webp' | relative_url }}" width="1200" height="700" loading="lazy" decoding="async"
+             alt="Bongo calendar month view for November 2026, with four events such as Budget Review Meeting and Team Standup, and Month, Week, Day and Agenda view buttons.">
+        <figcaption>Calendar, month view</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="{{ '/assets/screenshots/summary.webp' | relative_url }}" width="1440" height="900" loading="lazy" decoding="async"
+             alt="Bongo summary page with panels for unread mail addressed to the user, starred messages, invitations awaiting an answer and events in the next seven days.">
+        <figcaption>Summary page</figcaption>
+      </figure>
+      <figure class="shot shot--wide">
+        <img src="{{ '/assets/screenshots/inbox-dark.webp' | relative_url }}" width="1440" height="900" loading="lazy" decoding="async"
+             alt="The same three-pane mail view in the dark theme, with the selected message highlighted in amber.">
+        <figcaption>Mail, dark theme</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="start-title">
+  <div class="wrap start">
+    <div class="start__text">
+      <h2 id="start-title">Get started</h2>
+      <p>Each release has a zip for Linux amd64 and arm64 with the <code>bongo</code> and <code>bongo-import</code> binaries, an annotated example configuration and a systemd unit. The binaries have no runtime dependencies.</p>
+      <p>Development mode needs no configuration. It keeps nothing on disk after it stops, serves the web interface at <code>http://localhost:8080</code> and creates the login <code>admin@localhost</code> with the password <code>admin</code>.</p>
+      <ul class="link-list">
+        <li><a href="{{ '/docs/install/' | relative_url }}">Install from the release zip</a></li>
+        <li><a href="{{ '/docs/dev-quickstart/' | relative_url }}">Build and run from source</a></li>
+        <li><a href="{{ '/docs/multi-domain-hosting/' | relative_url }}">Host more than one domain</a></li>
+        <li><a href="{{ '/docs/importing/' | relative_url }}">Import existing mail</a></li>
+        <li><a href="{{ '/releases/' | relative_url }}">Release notes</a></li>
+      </ul>
+    </div>
+    <div class="terminal" role="group" aria-label="Example commands">
+      <div class="terminal__bar"><span>shell</span></div>
+<pre><code><span class="c"># {{ rel }}, Linux amd64</span>
+unzip bongo_{{ rel | remove_first: 'v' }}_linux_amd64.zip
+cd bongo_{{ rel | remove_first: 'v' }}_linux_amd64
+sudo install -m 0755 bongo bongo-import /usr/local/bin/
+
+<span class="c"># Try it in development mode</span>
+bongo serve --dev</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="section section--status" aria-labelledby="status-title">
+  <div class="wrap two-col">
+    <div>
+      <h2 id="status-title">Status</h2>
+      <p>Bongo is pre-1.0. A single-server deployment runs in production and has had several security reviews. Multi-server clustering is implemented and has had less testing. The <code>edge</code> and <code>agent</code> server roles are incomplete. Only the latest release receives fixes.</p>
+    </div>
+    <div>
+      <h2 id="source-title">Source and licence</h2>
+      <p>The source is at <a href="{{ site.repository_url }}">github.com/bongo-project/bongo</a>. Bongo is licensed under the <a href="{{ site.repository_url }}/blob/main/LICENSE">GNU Affero General Public License v3.0</a>. Bug reports and pull requests are welcome. Security problems are reported privately, as described in <a href="{{ site.repository_url }}/blob/main/SECURITY.md">SECURITY.md</a>.</p>
+    </div>
+    <div>
+      <h2 id="history-title">History</h2>
+      <p>The original Bongo project ran from 2007 to 2010 and was written in C and Python. It continued Hula, a mail and calendar project led by Novell. The current Bongo is a reimplementation in Go. The original project's pages are kept under <a href="{{ '/history/' | relative_url }}">History</a>.</p>
+    </div>
+  </div>
+</section>

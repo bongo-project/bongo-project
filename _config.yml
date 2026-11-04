@@ -1,11 +1,31 @@
-# name: "Bongo"
-title: "Bongo"
-description: "Bongo is an easy-to-use mail and calendar system, offering a simple yet powerful user interface. The goal is to make sharing, organisation, and communication simpler, quicker, and more useful."
+title: Bongo
+description: "Bongo is a mail and calendar server. It runs as one Go binary and serves IMAP, SMTP, POP3, CalDAV, CardDAV and a web interface."
+url: "https://bongo-project.org"
+baseurl: ""
 
-url: "bongo-project.org"
-markdown: redcarpet
-permalink: /:title
+# Current release, shown on the home page. Update at each release
+# (scripts/sync_releases.py refreshes the releases page itself).
+latest_release: v0.15.1
+repository_url: https://github.com/bongo-project/bongo
+
+markdown: kramdown
 highlighter: rouge
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+
 plugins:
+  - jekyll-redirect-from
   - jekyll-sitemap
-  - jekyll-feed
+  - jekyll-seo-tag
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - Makefile
+  - scripts
+  - vendor
+  - params.json
+  - .project

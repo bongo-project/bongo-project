@@ -1,0 +1,763 @@
+[
+ {
+  "minor": "0.15",
+  "release": {
+   "version": "v0.15.0",
+   "date": "2026-11-03",
+   "title": "calendar",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.0",
+   "annotated": true,
+   "patch": 0,
+   "notes": "### Recurrence and events\n\n- Recurring events expand in their own time zone, so a weekly 09:00\n  meeting stays at 09:00 local time across daylight-saving changes.\n  Exceptions and moved occurrences from CalDAV clients are honoured in the\n  web views, free/busy and reminders.\n- Links to a single occurrence work. Old links of the form {guid}\\_{date}\n  redirect.\n- An occurrence can be edited or deleted on its own, or with all the\n  occurrences that follow it.\n- Calendars created in the web carry their repeat rule, exceptions and time\n  zone over CalDAV and in export.\n- The event form refuses an end that is not after the start, and has Show\n  as Busy or Free. All-day events default to Free, timed events to Busy.\n  All-day events marked Busy block the whole day in free/busy.\n\n\n### Sharing\n\n- Calendars can be shared at free/busy, read or write level. The recipient\n  accepts or declines at /calendar/shares; an email tells them.\n- Read and write shares appear in the calendar views under Shared with me\n  and as CalDAV collections. With write access the recipient can create,\n  edit and delete events, which are stored under the owner.\n- The event form shows each local attendee's busy times for the day, for\n  attendees whose free/busy the user may see.\n\n\n### Invitations and scheduling\n\n- Events with attendees send invitations, updates and cancellations by\n  email (iMIP) from the web calendar.\n- Received invitations show a card in the message view with Accept,\n  Tentative and Decline. Replies update the attendee's status on the\n  organiser's event.\n- CalDAV clients send and answer invitations through the server (RFC 6638\n  scheduling). Apple Calendar and Thunderbird stop sending invitation mail\n  themselves, so each attendee receives one message.\n- Rooms and equipment are accounts that cannot sign in. They accept or\n  decline booking requests from their own domain automatically.\n\n\n### Publishing, subscriptions, tasks and reminders\n\n- A calendar can be published as a read-only iCalendar feed behind a\n  random link, with full or busy detail and an optional password.\n- External iCalendar feeds can be subscribed to and are refreshed every 6\n  hours. The fetcher refuses private and internal network addresses.\n- Tasks sync over CalDAV in a Tasks calendar and have a page at /tasks.\n  Tasks with a due date appear in the agenda.\n- Reminders can be sent by email. A reminder is recorded before it is sent\n  and is not sent twice after a restart.\n\n\n### Mail\n\n- New views: To me, From my contacts and Mailing lists.\n- /summary shows unread mail to me, starred mail, invitations awaiting an\n  answer and the next seven days. It is the default start page; the inbox\n  can be chosen instead in settings.\n- The relay passes DSN and SIZE parameters on and sends SMTPUTF8 when a\n  message needs it. Bounces and delivery reports to senders outside the\n  server are now sent, within the existing limits.\n\n\n### CalDAV and CardDAV setup\n\n- /.well-known/caldav and /.well-known/carddav answer every request\n  method. Apple Calendar and Contacts could not add an account before.\n- The Apple configuration profile (/.well-known/mobileconfig) also sets up\n  calendar and contacts accounts.\n- docs/caldav-carddav.md covers account details, discovery, client setup\n  and troubleshooting.\n\n\n### Upgrade notes\n\n- Upgrade every node before anyone shares a calendar. An older node stores\n  sharing commands as plain keys and holds no grants.\n- New key: calendar.subscriptions.allow\\_private\\_networks (default false, a\n  restart key).\n- The default start page is now the summary page; set the preference to\n  inbox to keep the old behaviour.\n- Existing shares are migrated once to free/busy grants on the leader.\n- Outbound relay now applies go-smtp's command and submission timeouts.\n- For discovery by email address, the email domain's own website must\n  redirect /.well-known/caldav and /.well-known/carddav to the mail host\n  for every request method, or the domain needs the SRV and TXT records the\n  admin DNS guide lists.\n- Browsers keep the old bongo.js until the asset version changes; reload\n  open tabs after upgrading.\n\nFull notes: prds/done/prd-calendar-v0.15.md and prds/verification.md.\n"
+  },
+  "patches": [
+   {
+    "version": "v0.15.1",
+    "date": "2026-11-04",
+    "title": "calendar fixes",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.1",
+    "annotated": true,
+    "patch": 1,
+    "notes": "#### CalDAV and CardDAV\n\n- CalDAV clients can create calendars and lists (MKCALENDAR and extended\n  MKCOL). A list created in Apple Reminders or Thunderbird holds tasks.\n- A calendar can be deleted in the web or from a CalDAV client, with its\n  events, tasks, shares and published feed. Tasks, the default calendar and\n  the last event calendar cannot be deleted.\n- A missing CalDAV object answers 404, not 500.\n- CalDAV and CardDAV ETags are quoted once, so updates with If-Match are\n  accepted. Events created in the web have a content ETag over CalDAV.\n  Clients fetch every contact, and every event created in the web, once\n  after the upgrade.\n- Windows time-zone names, as Outlook sends them, resolve through the CLDR\n  table. Such events were stored at 1970 before.\n- Events are filed only in calendars that exist.\n\n\n#### Calendars\n\n- A calendar can be created in the web, with a name, a colour and\n  optionally tasks. A user owns at most 5 calendars, Personal and Tasks\n  included; the limit applies in the web, over CalDAV and to subscriptions.\n- \"This and following\" no longer leaves an empty series behind when the\n  first occurrences were deleted.\n\n\n#### Tasks\n\n- Tasks in calendars shared with the user appear, read-only, in /tasks and\n  the agenda.\n- Recurring tasks appear at every occurrence. Overdue open tasks appear on\n  today's row.\n- A due date before the start is refused.\n\n\n#### Invitations and scheduling\n\n- Updates carry a higher SEQUENCE. Title and description changes are sent\n  to attendees.\n- No invitations or cancellations are sent for events entirely in the past.\n  An all-day event is past from midnight in the user's time zone.\n- CalDAV clients schedule single occurrences and attendees invited to one\n  occurrence only.\n- Deleting an invitation in a CalDAV client declines it.\n- A reply covering several occurrences is applied to all of them.\n- The invitation card shows the user's own answer. A user invited only at\n  an alias they cannot send from is told the organiser will not be told.\n- Rooms and equipment answer bookings for single occurrences. Booking mail\n  is no longer kept in the resource's inbox.\n\n\n#### Sharing and reminders\n\n- Pending calendar shares expire after 30 days. A user can leave a calendar\n  shared with them.\n- Browser reminders fire once.\n- Dates in reminder mail and the agenda follow the user's language.\n\n\n#### Mail and web\n\n- The To me, From my contacts and Mailing lists views moved to\n  /mail/view/..., so folders with those names are reachable.\n- \"Unread mail to me\" on the summary page lists unread mail only.\n- Display names containing a comma, including encoded non-ASCII names, are\n  no longer split.\n- Status messages show only fixed, translated texts; a link can no longer\n  put its own text in a message.\n- The recovery-code warning is shown on the inbox.\n- The Apple configuration profile has per-user identifiers, so two users of\n  one domain can install theirs on one device.\n\n\n#### Upgrade notes\n\n- No configuration changes.\n- Links to /mail/to-me, /mail/from-contacts and /mail/lists change to\n  /mail/view/...; the old paths are not redirected.\n- Status links carrying free text in ?flash= no longer show it.\n\nFull notes: prds/active/prd-calendar-fixes-v0.15.1.md and\nprds/verification.md. docs/caldav-carddav.md covers creating and deleting\ncalendars.\n"
+   }
+  ]
+ },
+ {
+  "minor": "0.14",
+  "release": {
+   "version": "v0.14.0",
+   "date": "2026-11-01",
+   "title": "mail delivery and rules",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.14.0",
+   "annotated": true,
+   "patch": 0,
+   "notes": "### Postmaster and submission\n\n- postmaster@ and abuse@ resolve on every hosted domain: to the domain\n  owner, else to smtp.postmaster\\_account, else to the catch-all. Without a\n  target, RCPT gets 550 5.1.1 and startup lists the domains concerned.\n- queue.bounce\\_copy\\_postmaster (default off) sends a headers-only copy of\n  each bounce to postmaster@ the sender's domain.\n- Implicit-TLS submission on port 465 is on when smtp.tls is set.\n  Autoconfig, Autodiscover, the Apple profile and the admin DNS guide list\n  465 first, only when the SMTP listeners start.\n- An RCPT to an unknown local part on a hosted domain, alias domains\n  included, is refused with 550 5.1.1. An authenticated session used to\n  relay it and the sender received a bounce later.\n\n\n### Vacation and rules\n\n- Vacation replies at /settings/vacation, with RFC 3834 loop protection,\n  one reply per sender per interval (1 to 30 days, default 7) and at most\n  100 replies per user per hour.\n- A rule can have up to 10 actions. flag, mark read and copy now work as\n  named; copy no longer moves. Spam stays in Junk.\n- New rules continue to the next rule after a match. Existing rules are\n  migrated to stop after a match, so they behave as before. The migration\n  also runs on a node that becomes leader later.\n- Rules can match any condition instead of all. New conditions: MIME type\n  of any part, and any header by name.\n\n\n### Queue, DSN and storage\n\n- queue.max\\_lifetime (default 5 days, was about 17 hours),\n  queue.max\\_retry\\_interval (1 hour) and queue.concurrency (5).\n- SMTP DSN parameters RET, ENVID, NOTIFY and ORCPT are accepted and\n  honoured for local senders, including delay reports\n  (queue.delay\\_warning\\_after, default 4 hours). Reports to external senders\n  are not sent yet.\n- Below storage.min\\_free\\_mb (default 1024) the server refuses new mail,\n  IMAP APPEND, uploads and DAV writes with a temporary error, and the admin\n  page shows a banner.\n\n\n### Domains, web mail and CLI\n\n- Domain aliasing: mail to user@alias.example is delivered to\n  user@example.com. A domain with alias domains cannot be deleted.\n- Archive and Unarchive in the message view, the bulk toolbar, the e key\n  and a left swipe on a phone, including from Starred and other virtual\n  views. A left swipe used to move the message to Trash. IMAP clients see\n  \\\\Archive on the Archive mailbox.\n- Reply to List. Replies follow Reply-To. Your own addresses are removed\n  from To and Cc; Reply on your own sent message addresses its original\n  recipients.\n- bongo sendmail, a sendmail-compatible submission client for cron and\n  scripts (docs/sendmail.md).\n- bongo user list, bongo domain list and bongo alias list, as a table or\n  JSON.\n\n\n### Upgrade notes\n\n- Upgrade every node before setting any new key (smtp.postmaster\\_account,\n  smtp.submissions\\_port, queue.\\*, storage.min\\_free\\_mb) or creating an alias\n  domain, a multi-action rule or a match-any rule. An older node refuses\n  the new keys and ignores the new rule fields.\n- Publish port 465 before deploying, or set smtp.submissions\\_port = 0.\n- Check the 1 GiB storage.min\\_free\\_mb default against the free space on\n  the data volume.\n- A configured smtp.tls certificate that fails to load now stops startup.\n- Browsers keep the old bongo.js until the asset version changes; reload\n  open tabs after upgrading.\n\nFull notes: prds/done/prd-mail-delivery-v0.14.md and prds/verification.md.\n"
+  },
+  "patches": [
+   {
+    "version": "v0.14.1",
+    "date": "2026-11-01",
+    "title": "postmaster startup report",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.14.1",
+    "annotated": true,
+    "patch": 1,
+    "notes": "#### Fixes\n\n- The startup warning about postmaster@ and abuse@ now names a domain only\n  when one of those addresses does not resolve. Explicit addresses, legacy\n  aliases and catch-alls count. In v0.14.0 it checked only the domain owner\n  and smtp.postmaster\\_account, so it named domains whose postmaster@ was\n  delivered by an alias and said their mail was refused.\n- The warning now reads \"domains where postmaster@ or abuse@ does not\n  resolve\". Log filters that matched the v0.14.0 text need updating.\n\n\n#### Upgrade notes\n\n- No configuration change. Delivery is unchanged; only the warning differs.\n\nFull notes: prds/done/prd-mail-delivery-v0.14.md.\n"
+   }
+  ]
+ },
+ {
+  "minor": "0.13",
+  "release": {
+   "version": "v0.13.0",
+   "date": "2026-10-29",
+   "title": "web UI rebuild",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.13.0",
+   "annotated": true,
+   "patch": 0,
+   "notes": "### Web UI\n\n- Every screen is rebuilt to the Bongo Mail design: new shell with top bar,\n  account menu and grouped sidebar; design tokens, Geist fonts and one icon\n  set; light and dark mode, including the login and other public pages.\n- Mailbox list shows previews, attachment markers, header counts and a bulk\n  toolbar. Message and thread view has a quick reply. Compose uses recipient\n  pills and a drop zone for attachments.\n- Calendar has an agenda view and shows times in the user's time zone\n  throughout. Contacts, rules, settings, security, tags, Junk and admin\n  (KPI cards, tables, status pills) follow the same layout.\n- No emoji remain in the templates.\n\n\n### Fixes from operator testing\n\n- Tagging works from the message view, the bulk toolbar and the context\n  menu. Typed tag names are folded into stored form (\"My Tag\" becomes\n  \"my-tag\"); a rejected tag shows an error instead of closing the picker.\n- The rule editor, the contact editor and the calendar show/hide checkbox\n  work under the Alpine CSP build.\n- Sidebar unread counts update live when messages are read or arrive.\n- \"Create filter\" in a message's More and context menus opens a new rule\n  matching the sender.\n- Tag colour swatches are announced by colour name.\n\n\n### Correctness\n\n- SQLite busy\\_timeout and WAL mode apply to every pooled connection, not\n  only the first; a contended index write now waits instead of failing with\n  SQLITE\\_BUSY.\n- An agent cancelled during registration shuts down cleanly.\n\n\n### Operations\n\n- golang.org/x/net updated to v0.62.0 for two html advisories.\n- Templates are generated with templ v0.3.1001.\n- Assets are cache-busted by commit hash; reload open tabs after upgrading.\n\nFull notes: prds/active/prd-ui-rebuild-v0.13.md.\n"
+  },
+  "patches": [
+   {
+    "version": "v0.13.4",
+    "date": "2026-10-31",
+    "title": "reminder checker crash fix",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.13.4",
+    "annotated": true,
+    "patch": 4,
+    "notes": "#### Stability\n\n- The server no longer panics in the calendar reminder checker. The\n  checker closed a storage iterator twice. Storage reuses closed\n  iterators, so the second close could break another scan in progress\n  and stop the server with \"index out of range\" in mergingIter.Close.\n  The fault was present since v0.1.0 and occurred after several hours of\n  running. A repeated close of a storage iterator is now a no-op.\n"
+   },
+   {
+    "version": "v0.13.3",
+    "date": "2026-10-31",
+    "title": "the app is named bongo",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.13.3",
+    "annotated": true,
+    "patch": 3,
+    "notes": "#### Naming\n\n- The server binary and CLI are named bongo. The release zips are named\n  bongo\\_\\<version\\>\\_linux\\_amd64.zip and bongo\\_\\<version\\>\\_linux\\_arm64.zip.\n- The container image runs /usr/local/bin/bongo.\n- The systemd unit is bongo.service.\n- The default data and log directories are /var/lib/bongo and\n  /var/log/bongo.\n- Protocol greetings, the Received-SPF header, log messages, the\n  self-signed certificate and the calendar PRODID use the name Bongo.\n"
+   },
+   {
+    "version": "v0.13.2",
+    "date": "2026-10-30",
+    "title": "domain administration fixes, Linux binaries, documentation",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.13.2",
+    "annotated": true,
+    "patch": 2,
+    "notes": "#### Security\n\n- Only global administrators can delete a domain. A domain administrator\n  could previously delete a domain they administer with a direct request,\n  although the web UI did not offer it.\n\n\n#### Mail\n\n- A disabled domain refuses all inbound mail. SMTP answers 550 5.1.1 for\n  every address on it, including aliases and the catch-all. Accounts and\n  stored mail are kept; re-enabling the domain restores delivery. Previously\n  disabling a domain only removed it from client autoconfiguration.\n\n\n#### Releases\n\n- Each version tag now publishes a GitHub release with Linux binaries for\n  amd64 and arm64, a SHA256SUMS file, and these notes. The zips include\n  LICENSE and THIRD\\_PARTY\\_NOTICES.md.\n\n\n#### Documentation\n\n- The walkthrough and development guide describe the rebuilt web UI.\n- Deployment, installation, configuration, import, clustering and\n  multi-domain documentation was checked against the code and corrected.\n- The edge and agent server roles are documented as incomplete. Use the\n  server role.\n- Dev mode serves the web UI over plain HTTP. make seed, make validate and\n  make ui-test-setup now work against a dev server.\n\nFull notes: prds/active/prd-ui-rebuild-v0.13.md (section 8.2).\n"
+   },
+   {
+    "version": "v0.13.1",
+    "date": "2026-10-30",
+    "title": "web UI fixes from operator testing",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.13.1",
+    "annotated": true,
+    "patch": 1,
+    "notes": "#### Mail view\n\n- Two-pane shows the message list above the reading pane; three-pane shows\n  them side by side. The two layouts previously looked the same.\n- In both pane layouts a message opens in the reading pane instead of\n  replacing the whole view. A click anywhere on a message row opens it.\n- In the pane layouts the list and the reading pane scroll separately.\n\n\n#### Keyboard\n\n- In the pane layouts j and k open the highlighted message after a 300 ms\n  pause. Holding the key moves through the list without marking every\n  message read.\n- d moves the highlighted message to Trash. In Trash, d does nothing.\n- d, r and drag-and-drop act on the mailbox on screen after sidebar\n  navigation. Previously they could act on a message with the same UID in\n  the previously loaded mailbox.\n\n\n#### Fixes\n\n- Deleting, moving or marking spam in a subfolder such as INBOX/Important\n  returns to that subfolder instead of showing \"Invalid UID\".\n- Pages load in dark mode without a light flash when the OS or the saved\n  preference is dark.\n\n\n#### Branding\n\n- The top bar and login page show the swoosh from the original Bongo project\n  logo.\n\nAssets are cache-busted by commit hash; reload open tabs after upgrading.\n\nFull notes: prds/active/prd-ui-rebuild-v0.13.md (US-024 to US-029).\n"
+   }
+  ]
+ },
+ {
+  "minor": "0.12",
+  "release": {
+   "version": "v0.12.0",
+   "date": "2026-10-26",
+   "title": "hardening release",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.12.0",
+   "annotated": true,
+   "patch": 0,
+   "notes": "### Security\n\n- /internal/\\* control routes move to a loopback control listener,\n  server.control\\_addr (default 127.0.0.1:8081); the web port answers 404.\n  The bongo-go CLI defaults --http-addr to it.\n- Bounces of forwarded mail are relayed only for SPF-pass or\n  authenticated senders.\n- SMTP DATA and BDAT refuse a body more than a tenth plus 1 KiB over the\n  declared SIZE (552 5.3.4).\n- CalDAV and CardDAV share a 64 MiB budget for request bodies in flight.\n- Send-as verification no longer reveals whether an address is taken; at\n  most 20 pending claims per user; claims are removed with the address\n  or domain; concurrent correct codes yield one owner.\n- IMAP, SMTP and POP3 fail closed when the account state cannot be read.\n- A redirect-listener bind failure stops startup; a web Serve error after\n  ready shuts the node down.\n- Uploads spool to disk above 8 MiB; the mailbox import streams messages\n  and checks quota first.\n\n\n### Correctness\n\n- SMTP writes one envelope per local recipient, so one recipient's rules\n  no longer file or drop another's copy.\n- A retried web send no longer duplicates (send ID; 409 on changed\n  content). Compose tabs opened before the upgrade must be reloaded.\n- Calendar export keeps its time zones; all-day reminders use the owner's\n  zone; the month grid shows neighbouring months' all-day events.\n- Compose messages are translated (de, es, fr).\n\n\n### Operations\n\n- Config validation refuses colliding or out-of-range listener ports and a\n  server with a wildcard bind and no advertise or cluster bind address,\n  at startup and on hot reload.\n- Built with Go 1.27.3; raft 1.8.0 and memberlist 0.7.0 (protocol\n  versions unchanged); chi updated past three advisories.\n- The repository is licensed AGPL-3.0; the web UI links to the source\n  (web.source\\_url).\n\nFull notes: prds/active/prd-hardening-v0.12.md, section 8.2.\n"
+  },
+  "patches": []
+ },
+ {
+  "minor": "0.11",
+  "release": {
+   "version": "v0.11.0",
+   "date": "2026-10-24",
+   "title": "",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.11.0",
+   "annotated": true,
+   "patch": 0,
+   "notes": "Phase B of the hardening PRD: agent role and cluster transport security.\n\n- Internal requests sign with the effective session secret; agent-role SMTP\n  verifies SRS recipients; agent antispam no longer skips DMARC on\n  unverifiable trust flags.\n- New cluster.bind\\_addr; Raft and gossip never bind server.bind\\_addr.\n- Raft with peers requires cert, key and CA, verifies peers, no plaintext.\n- Agent gRPC servers and clients use mutual TLS and bind the cluster address.\n- Blob sync and cluster join move to a mutual TLS peer listener\n  (cluster.peer\\_port, default 8302) on nodes with peers.\n\nUpgrade notes: a server with a non-loopback advertise\\_addr needs cluster\ncert, key and ca\\_file; server.bind\\_addr 0.0.0.0 without advertise\\_addr no\nlonger starts; role agent needs the agent\\_server.tls files; nodes with peers\nmust be upgraded together. Production (role server, single node, loopback\nadvertise) is unaffected.\n"
+  },
+  "patches": []
+ },
+ {
+  "minor": "0.10",
+  "release": {
+   "version": "v0.10.0",
+   "date": "2026-10-24",
+   "title": "",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.10.0",
+   "annotated": true,
+   "patch": 0,
+   "notes_md": "",
+   "notes": ""
+  },
+  "patches": []
+ },
+ {
+  "minor": "0.9",
+  "release": {
+   "version": "v0.9.0",
+   "date": "2026-10-23",
+   "title": "",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.9.0",
+   "annotated": true,
+   "patch": 0,
+   "notes_md": "",
+   "notes": ""
+  },
+  "patches": []
+ },
+ {
+  "minor": "0.8",
+  "release": {
+   "version": "v0.8.0",
+   "date": "2026-10-23",
+   "title": "",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.8.0",
+   "annotated": true,
+   "patch": 0,
+   "notes_md": "",
+   "notes": ""
+  },
+  "patches": [
+   {
+    "version": "v0.8.2",
+    "date": "2026-10-23",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.8.2",
+    "annotated": true,
+    "patch": 2,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.8.1",
+    "date": "2026-10-23",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.8.1",
+    "annotated": true,
+    "patch": 1,
+    "notes_md": "",
+    "notes": ""
+   }
+  ]
+ },
+ {
+  "minor": "0.7",
+  "release": {
+   "version": "v0.7.0",
+   "date": "2026-10-12",
+   "title": "",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.7.0",
+   "annotated": true,
+   "patch": 0,
+   "notes_md": "",
+   "notes": ""
+  },
+  "patches": [
+   {
+    "version": "v0.7.1",
+    "date": "2026-10-22",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.7.1",
+    "annotated": true,
+    "patch": 1,
+    "notes_md": "",
+    "notes": ""
+   }
+  ]
+ },
+ {
+  "minor": "0.6",
+  "release": {
+   "version": "v0.6.0",
+   "date": "2026-07-19",
+   "title": "",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.0",
+   "annotated": false,
+   "patch": 0,
+   "notes_md": "",
+   "notes": ""
+  },
+  "patches": [
+   {
+    "version": "v0.6.31",
+    "date": "2026-10-10",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.31",
+    "annotated": true,
+    "patch": 31,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.6.30",
+    "date": "2026-09-06",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.30",
+    "annotated": true,
+    "patch": 30,
+    "notes": "IMAP subscriptions, correct sequence numbering, and a working cluster status.\n\nfeat(imap): implement folder subscriptions\n\n  Subscribe and Unsubscribe were no-ops and List read only ReturnStatus, so\n  LSUB returned every mailbox rather than the subscribed subset, \\\\Subscribed\n  was never emitted, and unsubscribing a folder did not stick.\n\n  State lives on MailboxMeta as \"unsubscribed\", inverted deliberately. Every\n  mailbox already on disk has no such field and decodes as the zero value; with\n  \"subscribed\" that value is false, which would unsubscribe every folder for\n  every user on upgrade. Inverted, it means still-subscribed, so this release\n  changes nothing for existing mailboxes until someone explicitly\n  unsubscribes.\n\n  SUBSCRIBE applies through a synthetic Raft command rather than writing back a\n  whole MailboxMeta, which would race a delivery and reset uid\\_next, handing the\n  next message a duplicate UID.\n\nfix(imap): number EXPUNGE and SEARCH from the client's view\n\n  Sequence numbers were computed from the server's message list. They are only\n  meaningful relative to what the client has been told, and the two diverge as\n  soon as another connection removes a message between the client's last update\n  and the command -- at which point EXPUNGE tells the client to drop the wrong\n  message.\n\nfix(cmd): authenticate bongo-go cluster status\n\n  It called http.Get unsigned against an endpoint behind RequireInternalAuth, so\n  it returned 401 on every node with web.session\\_secret set. It worked only on a\n  dev node with no secret, which is where nobody needs it.\n"
+   },
+   {
+    "version": "v0.6.29",
+    "date": "2026-09-06",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.29",
+    "annotated": true,
+    "patch": 29,
+    "notes": "Outbound mail fails fast when its body is gone.\n\nfix(queue): bounce immediately when the message body is gone\n\n  handleFailure treats every error as worth retrying and only bounces once\n  maxAttempts is spent. A message enqueued before the 2026-08-30 blob-GC\n  incident therefore spent seven days cycling through attempts that each failed\n  identically: its body blob no longer exists, so the ninth attempt fails\n  exactly as the first did.\n\n  handlePermanentFailure bounces without consuming the remaining retries. It\n  fires only on store.ErrNotFound, because the distinction that matters is \"the\n  body is gone\" against \"the blob store is unwell\" -- an I/O error, a\n  permissions problem, or a store still starting are transient and keep their\n  backoff. Both read paths are covered, including RawMessageBytes for split\n  messages where a missing attachment is equally unrecoverable.\n\n  Nine wasted attempts is the smaller cost. The larger one is that the DSN the\n  sender received blamed delivery, when the body is gone and resending is the\n  only remedy. The bounce now says so.\n"
+   },
+   {
+    "version": "v0.6.28",
+    "date": "2026-09-06",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.28",
+    "annotated": true,
+    "patch": 28,
+    "notes": "IMAP clients are told about new mail outside IDLE.\n\nfix(imap): tell clients about new mail outside IDLE\n\n  session.Poll returned nil with the comment \"no-op, we use IDLE\". go-imap runs\n  Conn.poll after every command in the authenticated or selected state, and that\n  is how a server delivers untagged EXISTS and EXPUNGE to a client polling with\n  NOOP. Returning nil meant the only way any client learned about new messages\n  was IDLE, and only while idling on that exact mailbox.\n\n  Observed: a message appended to a user's Sent folder stored correctly, but\n  Thunderbird did not display it until the client was restarted, which forced a\n  fresh SELECT. Thunderbird idles on INBOX and polls other folders with NOOP.\n\n  The fix needs two baselines. cachedMsgs is the sequence-number working set that\n  handlers refresh freely -- Fetch, Store, Search, Copy and Move all overwrite it\n  at the top of the handler, and the poll runs after the handler returns, so\n  diffing against it destroys the pending EXISTS rather than deferring it.\n  reportedUIDs records what the client has actually been sent.\n\n  The baseline moves wherever the client is genuinely told something: Select,\n  Poll, Idle, Expunge and Move. Expunge and Move write untagged EXPUNGEs\n  themselves, and omitting them would leave the next poll re-sending a sequence\n  number the client has already renumbered against, dropping a message it should\n  have kept.\n\n  Expunges are written highest sequence number first, since each renumbers those\n  after it, and are withheld when allowExpunge is false because FETCH, STORE and\n  SEARCH must not emit them mid-command.\n\nKnown and unchanged: Subscribe and Unsubscribe are still no-ops, and List\nignores SelectSubscribed, so LSUB returns every mailbox rather than the\nsubscribed subset. Every folder is effectively always subscribed.\n"
+   },
+   {
+    "version": "v0.6.27",
+    "date": "2026-09-06",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.27",
+    "annotated": true,
+    "patch": 27,
+    "notes": "Raft snapshots actually happen, and the log finally truncates.\n\nfix(cluster): apply every raft tuning value, and stop the log growing forever\n\n  The production node had not snapshotted since 2026-08-23. Every restart\n  restored a two-week-old snapshot, rebuilt derived indexes for the state as of\n  that date, and warned for each message whose blob had since been collected --\n  warnings that accumulate permanently, one per delete-then-GC cycle. It also\n  feeds the accepted first-delivery stall (B12), which scales with log size.\n\n  Three causes, only one of them tuning.\n\n  snapshot\\_interval was parsed, defaulted, documented and set in the production\n  config, and never assigned to raft.Config. A settable key with no destination\n  is invisible: nothing downstream changes, so no behavioural test can see it.\n\n  TrailingLogs was not configurable, and raft's own default of 10240 exceeds\n  this project's snapshot\\_threshold default of 8192. Neither number is wrong\n  alone, but together the threshold is inert -- a snapshot fires and then\n  retains more entries than triggered it, so the log never truncates. It is now\n  configurable, and an inverted pairing is refused at startup with the reason in\n  the error. A node on the defaults is warned rather than refused, because\n  changing those defaults would alter behaviour for existing deployments.\n\n  The threshold was also far too high for a node delivering roughly five\n  messages a day. Code defaults are unchanged; only the production config is\n  tuned, to 256 with 128 trailing.\n\n  Adds \"bongo-go cluster snapshot\" to force one on the leader, since a stale\n  snapshot cannot otherwise be cleared without waiting for the threshold.\n\nKnown issue, not fixed here: \"bongo-go cluster status\" cannot authenticate\nagainst a node with web.session\\_secret set. It calls http.Get unsigned against\nan endpoint behind RequireInternalAuth and returns 401.\n"
+   },
+   {
+    "version": "v0.6.26",
+    "date": "2026-08-31",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.26",
+    "annotated": true,
+    "patch": 26,
+    "notes": "Tooling to see and act on mail whose body blob was lost.\n\nfeat(admin): report and purge mail whose body blob is gone\n\n  Eight messages carry MailMeta records whose raw\\_message blob no longer exists,\n  left by the 2026-08-30 blob-GC incident. They appear in no per-user SQLite\n  index, which proves nothing: that row is written during indexing, and indexing\n  is what fails on a missing body.\n\n  Adds FindDanglingMail and DeleteDanglingMail, the /internal/mail/dangling and\n  /internal/mail/purge-dangling endpoints behind internal auth, and the\n  \"bongo-go mail dangling\" / \"mail purge-dangling --confirm\" commands, mirroring\n  the existing orphaned-address repair.\n\n  The report lists every MailboxMessage entry referencing each GUID, which is\n  what distinguishes orphaned metadata from a live message sitting in a mailbox.\n  Deletion removes those entries too, and before the MailMeta: the sequence is\n  several Raft commands and is not atomic, and this order leaves orphaned\n  MailMeta on an interruption -- which sweepOrphanedMail already reclaims --\n  rather than a mailbox entry pointing at nothing, which nothing cleans up.\n\n  Each blob is re-checked immediately before its record is removed, since blob\n  sync can pull one back from a peer between the scan and the delete.\n\n  Also corrects a false claim in v0.6.25's 14.5 work. It said a MailboxMessage\n  decoded as a MailMeta fails proto.Unmarshal on a wire-type clash, and that a\n  user could therefore disable blob GC by naming a mailbox \"mail\". The decode\n  does not fail; protobuf-go skips a wire-type mismatch on a known field number\n  as an unknown field. That denial-of-service never existed. The structural key\n  parse remains correct for the plainer reason that unmarshal success is not\n  evidence a value is the type you expected.\n\nThis release ships the report. No purge has been run.\n"
+   },
+   {
+    "version": "v0.6.25",
+    "date": "2026-08-31",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.25",
+    "annotated": true,
+    "patch": 25,
+    "notes": "Blob GC reference integrity: the fixes for the 2026-08-30 mail-body loss.\n\nblob-gc is the only component that deletes blobs, and blobs are content-addressed\nand shared, so one missed reference loses that content for every holder with no\nundo. On 2026-08-30 a sweep deleted 17 blobs, two of which were still referenced.\nAn audit found eight gaps. This release fixes all of them.\n\nblob\\_gc must stay \"dryrun\" until the candidate lists produced by this build have\nbeen reviewed on real data. This release makes that review possible; it does not\nauthorise re-enabling deletion.\n\nfix(agent): re-validate blob GC candidates immediately before deleting\n\n  The minAge grace assumed a blob's mtime tracks its most recent write, but\n  BlobStore.Put early-returns without touching the file when the hash already\n  exists. A deduplicated write therefore keeps the ORIGINAL mtime, so a blob that\n  becomes referenced again during the reference scan is simultaneously absent from\n  the snapshot, older than the cutoff, and a two-pass candidate. Both existing\n  guards miss it, and the stamped-message redelivery path makes it deterministic.\n  Candidates are now re-checked against a fresh reference set immediately before\n  deletion, inside deleteSweptBlobs so nothing can reach a delete without it.\n\nfix(agent): count queued outbound attachments as referenced blobs\n\n  Attachment-dedup splits an outbound message into a skeleton plus separate\n  attachment blobs, which the queue worker reassembles before relaying. Only the\n  skeleton was referenced, so the GC reclaimed the attachments and the message\n  relayed with them missing. The queue entry stayed healthy throughout, so this\n  damaged outbound mail without leaving any evidence.\n\nfix(agent): parse mail keys structurally, then fail loudly on bad records\n\n  The mail scan matched a \"/mail/\" substring, which a user could trip by creating\n  an IMAP mailbox named \"mail\". proto.Unmarshal failures were then silently\n  skipped, dropping references. Fixed in that order deliberately: making unmarshal\n  fatal first would have let any user disable the GC node-wide.\n\nfix(agent): do not carry blob GC candidates across a failed pass\n\n  Both error paths returned the previous candidate set, so it survived an\n  arbitrary run of failed passes and \"two consecutive passes\" stopped meaning two\n  consecutive good ones.\n\nfix(agent): scan the spool twice so a released message keeps its body\n\n  An admin releasing a message from quarantine moves it backward through the\n  directory order the scan reads, so a release landing mid-scan appeared in no\n  listing at all and its body looked unreferenced.\n\nfeat(agent): log every blob a sweep reclaims, with size and mtime\n\n  The incident left \"candidates:17 deleted:17\" and nothing else, so the hashes\n  were unrecoverable and attribution meant decoding spool envelopes by hand. Both\n  modes now log per-blob detail at Info: a deleting pass is the one whose record\n  cannot be reconstructed afterwards.\n\ntest(agent): fail when a blob-bearing proto field escapes the reference set\n\n  Twice a field that pins a blob was missing from the scan. A descriptor walk now\n  requires every blob-bearing proto field to be explicitly classified, so a third\n  recurrence fails the build instead of production.\n"
+   },
+   {
+    "version": "v0.6.24",
+    "date": "2026-08-30",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.24",
+    "annotated": true,
+    "patch": 24,
+    "notes": "Two data races in the Raft FSM, and the per-user data leak behind the\nghost-mailbox incident.\n\nfix(cluster): synchronise FSM dependency injection against the apply loop\n\n  Agent.Run injects the search indexer, blob syncer, notifier and derived-index\n  queue into the FSM after handing it to Raft, so the apply goroutine read those\n  fields while Run was still writing them. This fires on any restart that\n  applies Raft entries during startup - i.e. every restart with a non-empty log.\n  StartIndexer's check-then-assign was also a double-start window: two callers\n  could each create a queue, orphaning the first worker. All four fields are now\n  guarded and read through accessors.\n\nfix(admin): reclaim per-user data left behind by account deletion\n\n  DeleteUser removed /user/{id}/\\* and the users row but neither the per-user\n  metadata database nor the search index, so every deleted account leaked both.\n  That leak is what let delivery keep succeeding into a deleted account's\n  mailbox. Adds the cascade, plus an orphan-GC sweep that reclaims /user/{id}/\n  trees with no users row and no profile - which also unpins the blobs those\n  keys were holding.\n\nchore(ci): stop running every workflow twice per pull request\n"
+   },
+   {
+    "version": "v0.6.23",
+    "date": "2026-08-30",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.23",
+    "annotated": true,
+    "patch": 23,
+    "notes": "fix(admin): delete a user's address-index records when the user is deleted\n\nDeleting a user left its /system/address/ records behind. Because\nRecipientResolver consults the address index ahead of aliases, the users\ntable and the catch-all, a stale record outranked any alias later created\nfor the same address and resolved mail to the deleted account - delivered\ninto an unreachable mailbox, neither bounced nor visible.\n\nAdds the DeleteUser cascade, plus 'bongo-go address orphans' and\n'bongo-go address repair' to find and remove existing stale records.\n"
+   },
+   {
+    "version": "v0.6.22",
+    "date": "2026-08-30",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.22",
+    "annotated": true,
+    "patch": 22,
+    "notes": "- Blob/orphan GC now announces its configured mode at startup, so a\n  blob\\_gc change is verifiable from the logs instead of being silent.\n- Composite antispam processor merges the losing backend's reasons\n  rather than discarding them (B14).\n- deploy: blob\\_gc returned to \"on\"; grafana dashboard removed with the\n  observability stack.\n- ci: golangci-lint pinned to v2.13.2.\n"
+   },
+   {
+    "version": "v0.6.21",
+    "date": "2026-08-27",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.21",
+    "annotated": true,
+    "patch": 21,
+    "notes": "Returns blob\\_gc to \"on\" now that collectReferencedBlobs scans all five\nspool directories, and is the first release published under the\nbongo-project/bongo name.\n"
+   },
+   {
+    "version": "v0.6.20",
+    "date": "2026-08-27",
+    "title": "- data-loss fixes, DAV correctness, tenant isolation",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.20",
+    "annotated": true,
+    "patch": 20,
+    "notes": "Contains fixes for three ways live mail could be destroyed, one of which\nwas observed in production on 2026-08-27. Deploying this is what allows\nstorage.blob\\_gc to be returned to \"on\"; until then the running config\nmust stay at \"dryrun\", and note that dryrun does NOT protect the\nquarantine deletion paths.\n\nData loss\n\n- Blob GC never counted the on-disk spool. A blob referenced only by a\n  spool envelope -- quarantined mail awaiting review, or anything\n  deferred past the one-hour grace -- was reclaimed while the envelope\n  survived. Observed symptom: an outbound forward failing with \"blob not\n  found\", because deliver.go reuses the spool envelope's BlobHash when\n  it enqueues a forward. Content in that state is unrecoverable.\n- Quarantine deletion destroyed other users' mail. Blobs are\n  content-addressed and shared, so quarantined spam has the same hash as\n  any byte-identical copy delivered elsewhere -- the normal case for a\n  broadcast message. All three paths did it, including the unattended\n  hourly auto-purge, which no configuration setting disables.\n- Queue retry, bounce and retry-now were two Raft commands each: delete\n  the old key, put the new one. A crash or rejection between them left\n  the message at neither key. Now one composite command applied in a\n  single Pebble batch.\n\nSecurity and correctness\n\n- The Global Address List could not be scoped: any authenticated user\n  could enumerate every address of every tenant through compose\n  autocomplete. Now restricted to the caller's own domain.\n- IMAP EXAMINE was not read-only. STORE, EXPUNGE and MOVE all mutated a\n  mailbox the client had been told was read-only; MOVE emptied it.\n- CalDAV/CardDAV ignored If-Match and If-None-Match entirely, so\n  concurrent edits silently last-write-wins. ETags were also\n  second-resolution, which had to be fixed first or the preconditions\n  would have protected nothing.\n- Mixed permanent and transient relay outcomes re-sent to and re-bounced\n  permanently-failed recipients on every attempt, up to ten duplicate\n  DSNs per address.\n\nOther\n\n- Received mail bodies are now indexed, so body search works for mail\n  you received and not only mail you sent.\n- Tagging a message no longer deletes its indexed body.\n- Calendar events with an unparseable RRULE are shown as a single\n  occurrence rather than vanishing from every view.\n\nTests\n\nAround 60 tests added, each verified to fail against the defect it\ncovers. Includes the DAV cross-account scoping suite, which had no\ncoverage at all, and replaces two tests that asserted nothing.\n"
+   },
+   {
+    "version": "v0.6.19",
+    "date": "2026-08-22",
+    "title": "- tester release with corrected dev-mode instructions",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.19",
+    "annotated": true,
+    "patch": 19,
+    "notes": "Identical server code to v0.6.17. Corrects the tester README's first\ninstruction, which told testers to open https://localhost:8080 when dev mode\nserves plain HTTP, and lists the dev-mode mail ports.\n"
+   },
+   {
+    "version": "v0.6.18",
+    "date": "2026-08-22",
+    "title": "- tester release README",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.18",
+    "annotated": true,
+    "patch": 18,
+    "notes": "Identical code to v0.6.17; this tag exists so the shared release artifact\ncorresponds to a real commit. Fills in the tester README's contact channel\n(issues on the private repository) and its terms (private evaluation build, no\nopen-source licence applying yet).\n"
+   },
+   {
+    "version": "v0.6.17",
+    "date": "2026-08-20",
+    "title": "- delivery-path performance and observability",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.17",
+    "annotated": true,
+    "patch": 17,
+    "notes": "Derived search/metadata indexing no longer runs inside the Raft apply path, so\nopening a user's index handles cannot block mail delivery.\n\nRaft's LastIndex no longer scans the entire transaction log to find its last\nentry. On a log the size of production's this was ~20ms per call against\n15.7us for a direct seek, and Raft calls it constantly.\n\nRaft's own logs are no longer discarded. The consensus layer previously ran\ncompletely silent, which made a delivery stall inside it impossible to explain\nfrom the outside.\n\nThe delivery stage now reports a per-step breakdown when it is slow, and the\nFSM reports slow applies and slow index work.\n\nKNOWN ISSUE: the first delivery after a restart can still take ~70s. Normal\ndelivery is sub-second (median 0.59s) and warm delivery is ~63ms, so this\naffects one message per restart. It is measured to be inside hashicorp/raft\nbetween the write call and our FSM being invoked; see task B12.\n"
+   },
+   {
+    "version": "v0.6.16",
+    "date": "2026-08-20",
+    "title": "- derived indexing no longer blocks mail delivery",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.16",
+    "annotated": true,
+    "patch": 16,
+    "notes": "The first delivery after a restart took 42-85s, against 63ms once warm,\nbecause the Raft apply maintained per-user search and metadata indexes\ninline: the first write paid the cost of opening that user's handles while\nthe message waited behind it.\n\nMail and event indexing now runs on a background worker, so a message is\nstored and visible immediately and only search catches up fractionally\nlater. Mailbox listings read from Pebble and are unaffected.\n\nProfile indexing stays inline on purpose, because it writes the shared\nsystem.db that user creation also writes.\n\nAlso documents that the 5s passed to the Raft apply is not an upper bound on\nthe call, sets a SQLite busy timeout, and logs slow index work so a\nrecurrence reports itself.\n"
+   },
+   {
+    "version": "v0.6.15",
+    "date": "2026-08-20",
+    "title": "\u2014 trusted submission, scanner wiring, quarantine release fix",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.15",
+    "annotated": true,
+    "patch": 15,
+    "notes": "Fixes mail between accounts on a hosted domain being filed as spam: an\nauthenticated submission (or a connection from a configured trusted network)\nis no longer judged by SPF, DKIM alignment and DMARC, which cannot succeed\nfrom a container or LAN address. Content filtering is unchanged \u2014 scoring,\nBayes and virus scanning still run for trusted mail.\n\nFixes a silent mail-loss bug: releasing a message from quarantine moved it to\na spool directory nothing reads, so it was never delivered and never surfaced\nagain. Release now re-queues it for delivery without re-running the check that\nquarantined it.\n\nWires up scanners that were implemented but never constructed. Enabling\nantivirus now actually scans; rspamd and SpamAssassin can be selected and are\ncomposed with the builtin scorer rather than replacing it. An unreachable\nantivirus scanner quarantines rather than delivering unscanned (previously it\nsilently passed everything); an unreachable spam scanner degrades to the\nbuiltin verdict, because mail should never be held up by a spam scanner.\n\nAdds a bulk rescan action so a quarantined backlog can be drained.\n\nOperator note: quarantine is auto-purged after pipeline.quarantine\\_retention\n(30d default) and the purge deletes the message, so the antivirus recovery\nwindow is finite. Alert on the ERROR log if antivirus is enabled.\n"
+   },
+   {
+    "version": "v0.6.14",
+    "date": "2026-08-18",
+    "title": "test, security and CI repair",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.14",
+    "annotated": true,
+    "patch": 14,
+    "notes": "Restores a green CI pipeline for the first time since 12 July. Three\nindependent failures, each masking the next:\n\n- integration: a test scraped a /mail/blob/{hash} URL the app stopped\n  emitting after the Phase 9 attachment-dedup work; one failure cascaded\n  into a 10-minute suite timeout on CI runners.\n- govulncheck: 20 vulnerabilities. 18 stdlib, cleared by moving the go\n  directive to 1.26.6; the rest by bumping grpc and x/text.\n- gosec: never ran until govulncheck passed. Of three pre-existing HIGH\n  findings, the quota-store integer conversions were a real enforcement\n  bypass - a negative usage made every storage-quota check pass.\n\nNo delivery-path changes since v0.6.13.\n"
+   },
+   {
+    "version": "v0.6.13",
+    "date": "2026-08-16",
+    "title": "outbound deliverability",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.13",
+    "annotated": true,
+    "patch": 13,
+    "notes": "Fixes outbound SMTP announcing itself as EHLO localhost, which strict\nreceivers (Postfix reject\\_non\\_fqdn\\_helo\\_hostname and most large providers)\npermanently rejected - breaking outbound mail from all local users.\n\nAlso makes the resulting bounces visible instead of silently junked:\nDSNs are DKIM-signed so they pass our own DMARC check, conform to\nRFC 3464/3834, and use the null envelope sender. Delivered messages now\ncarry Authentication-Results and X-Spam-\\* headers.\n"
+   },
+   {
+    "version": "v0.6.12",
+    "date": "2026-07-22",
+    "title": "log attachment dedup outcome (Loki-visible) + Grafana dedup panels",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.12",
+    "annotated": true,
+    "patch": 12,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.6.11",
+    "date": "2026-07-22",
+    "title": "attachment dedup metrics (9.8); Phase 9 complete",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.11",
+    "annotated": true,
+    "patch": 11,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.6.10",
+    "date": "2026-07-22",
+    "title": "outbound attachment dedup (9.6) with queue reconstruct",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.10",
+    "annotated": true,
+    "patch": 10,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.6.9",
+    "date": "2026-07-22",
+    "title": "fix split-attachment download/preview (decode via message route)",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.9",
+    "annotated": true,
+    "patch": 9,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.6.8",
+    "date": "2026-07-22",
+    "title": "attachment dedup (Phase 9 inbound) + opt-in blob GC",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.8",
+    "annotated": true,
+    "patch": 8,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.6.7",
+    "date": "2026-07-21",
+    "title": "opt-in display for image attachments",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.7",
+    "annotated": true,
+    "patch": 7,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.6.6",
+    "date": "2026-07-21",
+    "title": "fix inbound mail attachment downloads (message-scoped attachment route)",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.6",
+    "annotated": true,
+    "patch": 6,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.6.5",
+    "date": "2026-07-21",
+    "title": "in-app admin help (8.1) \u2014 DNS status legend + DKIM re-publish note",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.5",
+    "annotated": true,
+    "patch": 5,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.6.4",
+    "date": "2026-07-21",
+    "title": "backlog cleanup + hardening (B2-B7) + queue/antispam metrics",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.4",
+    "annotated": true,
+    "patch": 4,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.6.2",
+    "date": "2026-07-19",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.2",
+    "annotated": false,
+    "patch": 2,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.6.1",
+    "date": "2026-07-19",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.6.1",
+    "annotated": false,
+    "patch": 1,
+    "notes_md": "",
+    "notes": ""
+   }
+  ]
+ },
+ {
+  "minor": "0.5",
+  "release": {
+   "version": "v0.5.0",
+   "date": "2026-07-18",
+   "title": "",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.5.0",
+   "annotated": false,
+   "patch": 0,
+   "notes_md": "",
+   "notes": ""
+  },
+  "patches": [
+   {
+    "version": "v0.5.1",
+    "date": "2026-07-18",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.5.1",
+    "annotated": false,
+    "patch": 1,
+    "notes_md": "",
+    "notes": ""
+   }
+  ]
+ },
+ {
+  "minor": "0.4",
+  "release": {
+   "version": "v0.4.0",
+   "date": "2026-07-18",
+   "title": "",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.4.0",
+   "annotated": false,
+   "patch": 0,
+   "notes_md": "",
+   "notes": ""
+  },
+  "patches": [
+   {
+    "version": "v0.4.1",
+    "date": "2026-07-18",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.4.1",
+    "annotated": false,
+    "patch": 1,
+    "notes_md": "",
+    "notes": ""
+   }
+  ]
+ },
+ {
+  "minor": "0.3",
+  "release": {
+   "version": "v0.3.0",
+   "date": "2026-07-12",
+   "title": "",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.0",
+   "annotated": false,
+   "patch": 0,
+   "notes_md": "",
+   "notes": ""
+  },
+  "patches": [
+   {
+    "version": "v0.3.14",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.14",
+    "annotated": false,
+    "patch": 14,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.13",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.13",
+    "annotated": false,
+    "patch": 13,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.12",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.12",
+    "annotated": false,
+    "patch": 12,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.11",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.11",
+    "annotated": false,
+    "patch": 11,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.10",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.10",
+    "annotated": false,
+    "patch": 10,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.9",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.9",
+    "annotated": false,
+    "patch": 9,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.8",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.8",
+    "annotated": false,
+    "patch": 8,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.7",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.7",
+    "annotated": false,
+    "patch": 7,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.6",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.6",
+    "annotated": false,
+    "patch": 6,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.5",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.5",
+    "annotated": false,
+    "patch": 5,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.4",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.4",
+    "annotated": false,
+    "patch": 4,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.3",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.3",
+    "annotated": false,
+    "patch": 3,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.2",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.2",
+    "annotated": false,
+    "patch": 2,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.3.1",
+    "date": "2026-07-12",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.3.1",
+    "annotated": false,
+    "patch": 1,
+    "notes_md": "",
+    "notes": ""
+   }
+  ]
+ },
+ {
+  "minor": "0.2",
+  "release": {
+   "version": "v0.2.0",
+   "date": "2026-07-12",
+   "title": "",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.2.0",
+   "annotated": false,
+   "patch": 0,
+   "notes_md": "",
+   "notes": ""
+  },
+  "patches": []
+ },
+ {
+  "minor": "0.1",
+  "release": {
+   "version": "v0.1.0",
+   "date": "2026-07-08",
+   "title": "",
+   "url": "https://github.com/bongo-project/bongo/releases/tag/v0.1.0",
+   "annotated": false,
+   "patch": 0,
+   "notes_md": "",
+   "notes": ""
+  },
+  "patches": [
+   {
+    "version": "v0.1.2",
+    "date": "2026-07-10",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.1.2",
+    "annotated": false,
+    "patch": 2,
+    "notes_md": "",
+    "notes": ""
+   },
+   {
+    "version": "v0.1.1",
+    "date": "2026-07-08",
+    "title": "",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.1.1",
+    "annotated": false,
+    "patch": 1,
+    "notes_md": "",
+    "notes": ""
+   }
+  ]
+ }
+]

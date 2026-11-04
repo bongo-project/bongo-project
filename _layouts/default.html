@@ -1,10 +1,21 @@
-{% include header.html %}
-
-{% include menu.html %}
-
-{{content}}
-      
-{% include footer.html %}
-
-
- 
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  {% seo %}
+  <link rel="preload" href="{{ '/assets/fonts/Geist-Regular.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="any">
+  <link rel="icon" href="{{ '/assets/img/bongo-favicon.png' | relative_url }}" type="image/png">
+</head>
+<body class="{{ page.body_class }}">
+  <a class="skip-link" href="#main">Skip to content</a>
+  {% include site-header.html %}
+  <main id="main" tabindex="-1">
+    {{ content }}
+  </main>
+  {% include site-footer.html %}
+</body>
+</html>

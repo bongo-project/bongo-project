@@ -1,0 +1,45 @@
+---
+layout: default
+title: Documentation
+description: "Bongo documentation: installation, development, multi-domain hosting, CalDAV and CardDAV, importing mail and clustering."
+---
+<div class="wrap docs">
+  <nav class="docs-nav" aria-label="Documentation">
+    <p class="docs-nav__title"><a href="{{ '/docs/' | relative_url }}" aria-current="page">Documentation</a></p>
+    <ul>
+      {%- for d in site.data.docs %}
+      <li><a href="{{ d.url | relative_url }}">{{ d.title }}</a></li>
+      {%- endfor %}
+    </ul>
+  </nav>
+  <div class="prose docs-body">
+    <h1>Documentation</h1>
+    <p class="lead">These guides are copied from the <a href="{{ site.repository_url }}/tree/main/docs"><code>docs/</code> directory</a> of the source repository for release {{ site.latest_release }}. The annotated example configuration, <a href="{{ site.repository_url }}/blob/main/deploy/bongo.example.hcl"><code>deploy/bongo.example.hcl</code></a>, lists every configuration option.</p>
+
+    <h2 id="run">Install and run</h2>
+    <dl class="doc-index">
+      <dt><a href="{{ '/docs/install/' | relative_url }}">Install</a></dt>
+      <dd>Install and run Bongo from the release zip under systemd, configure DKIM and an external SMTP relay, and create the first administrator.</dd>
+      <dt><a href="{{ '/docs/dev-quickstart/' | relative_url }}">Development quick start</a></dt>
+      <dd>Build from source and run a development server with test data. Lists the development ports.</dd>
+      <dt><a href="{{ '/docs/walkthrough/' | relative_url }}">Walkthrough</a></dt>
+      <dd>A tour of the running server: the web interface, the admin panel, importing mail, desktop clients, the validation suite and the spam filter.</dd>
+    </dl>
+
+    <h2 id="operate">Operate</h2>
+    <dl class="doc-index">
+      <dt><a href="{{ '/docs/multi-domain-hosting/' | relative_url }}">Multi-domain hosting</a></dt>
+      <dd>Add domains at runtime, publish their DNS records and read the DNS status checks.</dd>
+      <dt><a href="{{ '/docs/caldav-carddav/' | relative_url }}">CalDAV and CardDAV</a></dt>
+      <dd>Connect calendar and contacts clients, and how sharing and scheduling behave over CalDAV.</dd>
+      <dt><a href="{{ '/docs/importing/' | relative_url }}">Importing mail</a></dt>
+      <dd>Use <code>bongo-import</code> with mbox, Maildir, .eml, IMAP servers and Thunderbird profiles.</dd>
+      <dt><a href="{{ '/docs/sendmail/' | relative_url }}">bongo sendmail</a></dt>
+      <dd>Send mail from cron jobs and PHP through a Bongo server.</dd>
+      <dt><a href="{{ '/docs/config-reload/' | relative_url }}">Config reload</a></dt>
+      <dd>Which configuration keys a SIGHUP applies in place and which need a restart.</dd>
+      <dt><a href="{{ '/docs/multi-node-cluster-checklist/' | relative_url }}">Multi-node cluster checklist</a></dt>
+      <dd>What to configure before a server joins peers: gossip encryption, Raft mutual TLS and private transports.</dd>
+    </dl>
+  </div>
+</div>

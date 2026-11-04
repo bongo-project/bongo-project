@@ -1,0 +1,37 @@
+---
+layout: default
+title: History
+description: "Pages of the original Bongo project (2007-2010), written in C and Python."
+redirect_from:
+  - /Documentation/
+---
+{%- assign groups = "about|About the project,install|Install and administration,development|Development,gsoc|Google Summer of Code,release-notes|Release notes 0.1-0.6" | split: "," -%}
+{%- assign hpages = site.pages | where_exp: "p", "p.history_group" | sort: "title" -%}
+<div class="wrap history-index">
+  <header class="page-head">
+    <h1>History</h1>
+    <p class="lead">The original Bongo project ran from 2007 to 2010. It was written in C and Python and continued Hula, a mail and calendar project led by Novell. These pages are the project's documentation and wiki from that time, kept as they were written. The current Bongo is a reimplementation in Go; see the <a href="{{ '/docs/' | relative_url }}">documentation</a> for it.</p>
+  </header>
+  <figure class="history-logo">
+    <img src="{{ '/images/Bongo-logo-yellow.png' | relative_url }}" alt="The original Bongo logo from 2007: the word Bongo in black, the word Project in yellow and four orange petals." width="204" height="46" loading="lazy">
+    <figcaption>The original logo, 2007.</figcaption>
+  </figure>
+  <div class="history-groups">
+    {%- for g in groups %}
+    {%- assign kv = g | split: "|" %}
+    <section class="history-group" aria-labelledby="{{ kv[0] }}">
+      <h2 id="{{ kv[0] }}">{{ kv[1] }}</h2>
+      <ul>
+        {%- if kv[0] == "about" %}
+        <li><a href="{{ '/history/original-home.html' | relative_url }}">Original home page</a></li>
+        {%- endif %}
+        {%- for p in hpages %}
+        {%- if p.history_group == kv[0] and p.url != '/history/original-home.html' %}
+        <li><a href="{{ p.url | relative_url }}">{{ p.title }}</a></li>
+        {%- endif %}
+        {%- endfor %}
+      </ul>
+    </section>
+    {%- endfor %}
+  </div>
+</div>

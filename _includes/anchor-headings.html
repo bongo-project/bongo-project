@@ -1,0 +1,23 @@
+{%- comment -%}
+  Adds a "#" permalink to every h2, h3 and h4 that has an id. Pure Liquid,
+  so it runs on GitHub Pages without a plugin. Usage:
+  {% include anchor-headings.html html=content %}
+{%- endcomment -%}
+{%- assign chunks = include.html | split: '<h' -%}
+{%- capture out -%}
+{%- for c in chunks -%}
+{%- if forloop.first -%}{{ c }}{%- continue -%}{%- endif -%}
+{%- assign lvl = c | slice: 0 -%}
+{%- assign head = c | slice: 1, 5 -%}
+{%- if head == ' id="' and lvl != '' and '234' contains lvl -%}
+{%- assign parts = c | split: '"' -%}
+{%- assign id = parts[1] -%}
+{%- assign close = '</h' | append: lvl | append: '>' -%}
+{%- assign link = '<a class="heading-anchor" href="#' | append: id | append: '" aria-hidden="true" tabindex="-1">#</a>' | append: close -%}
+<h{{ c | replace_first: close, link }}
+{%- else -%}
+<h{{ c }}
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+{{ out }}
