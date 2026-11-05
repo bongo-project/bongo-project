@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.2",
+    "date": "2026-11-05",
+    "title": "web UI fixes",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.2",
+    "annotated": true,
+    "patch": 2,
+    "notes": "#### Calendar\n\n- The calendar settings page uses the shared page, card, field and button\n  styles, in light, dark and mobile.\n- The calendar sidebar shows coloured dots and themed checkboxes. Import is\n  one button. The month title in the mini calendar is readable in the light\n  theme.\n- The week and day views show the weekday and date above each column, with\n  today highlighted. A header links to that day.\n- The event form follows the theme. Its controls were white in dark mode.\n- The calendar invitations page uses the shared page and card styles.\n- The result of an import is shown after the import.\n\n\n#### Tasks and Apple Reminders\n\n- An account with no calendar that holds tasks gets the Tasks calendar the\n  next time it opens a calendar page or a CalDAV client lists its calendars.\n  This calendar sits outside the limit of 5 calendars per user.\n- The placeholder name DEFAULT\\_TASK\\_CALENDAR\\_NAME from Apple Reminders is\n  stored as \"Tasks\". A list already created with that name keeps it.\n\n\n#### Admin\n\n- The product name is readable on the admin header. The admin footer and the\n  link back to mail are styled.\n\n\n#### Development\n\n- make seed creates tasks.\n- make ui-shots also covers calendar invitations, the event form and tasks.\n\n\n#### Upgrade notes\n\n- No configuration changes.\n- An account with 4 event calendars and no Tasks calendar has one calendar\n  fewer available after the upgrade, because Tasks is added.\n\nFull notes: prds/done/prd-ui-fixes-v0.15.2.md and prds/verification.md.\n"
+   },
+   {
     "version": "v0.15.1",
     "date": "2026-11-04",
     "title": "calendar fixes",

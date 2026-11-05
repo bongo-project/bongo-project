@@ -135,12 +135,15 @@ into an events calendar, or of an event into a tasks calendar, answers `403`
 with the `supported-calendar-component` precondition.
 
 The Tasks calendar (`tasks`) is not created with the account. Bongo creates
-it, together with the Personal calendar, the first time an account that has
-no calendar at all uses calendars: any calendar page or action in the web
-interface, a CalDAV listing of calendars, a CalDAV `PUT`, or the first
-`MKCALENDAR` or extended `MKCOL` (Personal and Tasks are made first, then the
-requested calendar). Saving a task in the web interface when no calendar holds
-tasks also creates Tasks. Tasks cannot be deleted.
+it for any account with no calendar that holds tasks (a subscribed calendar
+does not count), the next time the account opens a month, week, day, agenda or settings page in
+the web interface, saves an event there, or sends a CalDAV listing of
+calendars, a `PUT`, an `MKCALENDAR` or an extended `MKCOL`. A first use by an account with no
+calendar at all also creates Personal; Personal and Tasks are made first, then
+any requested calendar. Saving a task in the web interface when no calendar
+holds tasks also creates Tasks. Bongo creates it outside the limit on calendars
+per user, so an account already at the limit goes one over. An account that
+already has a calendar holding tasks gets none. Tasks cannot be deleted.
 
 ## Creating and deleting calendars
 
@@ -155,7 +158,9 @@ header.
   with the `supported-calendar-component` precondition.
 - The display name becomes the calendar's name: control characters are
   removed and it is cut to 255 characters. Without one the segment is the
-  name. The description is kept, up to 4096 characters. Bongo ignores the
+  name. Apple Reminders sends the placeholder `DEFAULT_TASK_CALENDAR_NAME` for
+  its default list; Bongo stores that name as "Tasks". The description is kept,
+  up to 4096 characters. Bongo ignores the
   colour, the order and the time zone the client sends, so the client's
   colour is not kept.
 - A segment uses letters, digits, `_`, `.` and `-`, is at most 128
