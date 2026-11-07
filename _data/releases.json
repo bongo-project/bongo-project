@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.3",
+    "date": "2026-11-07",
+    "title": "app passwords",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.3",
+    "annotated": true,
+    "patch": 3,
+    "notes": "#### App passwords\n\n- An app password is a per-device credential for IMAP, POP3, SMTP submission,\n  CalDAV and CardDAV. It never signs in to the web interface.\n- Each password has 24 letters. Bongo shows it once and stores only a hash.\n- Settings, Security lists each password with its label, creation date and last\n  used date. A user can hold up to 10.\n- Creating a password needs the account password, and a code with 2FA on.\n- A successful app password login forgives no failed guesses at the account\n  password.\n- A user name with the shape of an app password is not logged.\n- Revoking a password refuses its next login and ends the IMAP, POP3 and SMTP\n  sessions it opened on their next command.\n- Change password has a box, ticked by default, that also revokes all app passwords.\n- An admin can revoke all of a user's app passwords.\n\n\n#### Add a device\n\n- Add a device shows a new app password beside the server settings. These match\n  the autoconfig documents.\n- Apple devices can download a personal profile with Mail, Calendar, Contacts and\n  Reminders set up. The profile is unsigned, so the device shows Not Verified.\n- A QR code holds a one-time link for a phone. The link expires after 5 minutes\n  and works once.\n\n\n#### Require app passwords\n\n- An account with 2FA and at least one app password can turn on Require app\n  passwords. IMAP, POP3, SMTP submission, CalDAV and CardDAV then refuse the\n  account password.\n- Turning it on ends sessions opened with the account password.\n- The switch is offered at the end of 2FA enrolment and on the Security page.\n\n\n#### Documentation\n\n- docs/caldav-carddav.md, docs/sendmail.md, docs/walkthrough.md and SECURITY.md\n  cover app passwords and the switch.\n- docs/design/from-nmap-to-one-binary.md records the move from NMAP agents to one\n  binary.\n\n\n#### Upgrade notes\n\n- No configuration changes.\n- Nothing changes for an account until its owner creates an app password or turns\n  on the switch.\n- Upgrade every node together. An earlier binary stores the app password touch and\n  link commands as literal keys, ignores the switch and refuses app passwords.\n\n\n#### Known limits\n\n- The Apple profile and QR link have not been checked on real devices.\n\nFull notes: prds/done/prd-app-passwords-v0.15.3.md and prds/verification.md.\n"
+   },
+   {
     "version": "v0.15.2",
     "date": "2026-11-05",
     "title": "web UI fixes",

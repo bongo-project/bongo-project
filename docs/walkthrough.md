@@ -200,8 +200,10 @@ The settings sidebar also links to:
 - **Filter Rules:** rules that sort incoming mail, for example move
   newsletters to a folder, star messages from a sender or forward matches.
 - **Tags:** create, colour and order tags.
-- **Security:** change password, and set up two-factor authentication with
-  recovery codes.
+- **Security:** change password, set up two-factor authentication with
+  recovery codes, and create app passwords for mail and calendar clients.
+  Add a device shows an app password beside the server settings, or builds an
+  Apple profile or QR code.
 
 Send-as addresses are managed at `/settings/addresses`.
 

@@ -40,7 +40,7 @@ host     = "mail.example.com"
 port     = 465                    # 465 implicit TLS (default), 587 STARTTLS
 # tls    = "implicit"             # or "starttls"; defaults from the port
 username = "cron@example.com"     # the full account address
-password = "the account password"
+password = "an app password"     # or the account password, if the account allows it
 # insecure_skip_verify = true     # self-signed dev certificate, loopback only
 ```
 
