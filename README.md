@@ -46,7 +46,19 @@ After a release, also set `latest_release` in `_config.yml`.
 
 ## Building locally
 
-The `Gemfile` uses the `github-pages` gem so a local build matches the live one.
+The `Gemfile` pins the `github-pages` gem so a local build matches the live one.
+GitHub builds the live site with its own versions and ignores `Gemfile.lock`. The
+current versions are at <https://pages.github.com/versions.json>. When that file
+moves on, change the pin in the `Gemfile` and regenerate the lock.
+
+`github-pages` needs Ruby below 4.0. With Docker, no local Ruby is needed:
+
+```bash
+make docker-serve    # http://localhost:4010
+make docker-build    # writes _site/
+```
+
+With a local Ruby 3.3:
 
 ```bash
 bundle config set --local path vendor/bundle
