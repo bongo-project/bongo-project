@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.5",
+    "date": "2026-11-08",
+    "title": "free the disk space of deleted mail",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.5",
+    "annotated": true,
+    "patch": 5,
+    "notes": "#### Mail pipeline\n\n- The spool no longer keeps an envelope for every delivered message. Before,\n  each message that finished the pipeline left an envelope file in\n  spool/deliver/, and nothing removed it.\n- Those envelopes counted as references to the message body. The blob\n  garbage collector therefore never deleted the body of a message received\n  over SMTP, even after the message was deleted and Trash emptied.\n- On the first start, Bongo deletes the envelopes left in spool/deliver/ and\n  logs \"spool: removed delivered envelopes\" with the count.\n- The blob garbage collector then frees the bodies of deleted mail. A body is\n  deleted when it has been unreferenced on two passes and is older than one\n  hour. Passes run every 15 minutes.\n\n\n#### Documentation\n\n- The load test PRD records the search index size per message measured in\n  the first load test run, and a plan to reduce it.\n\n\n#### Upgrade notes\n\n- No configuration changes.\n- spool/deliver/ is still created, so a rollback to v0.15.4 works. v0.15.4\n  writes envelopes there again until the next upgrade.\n"
+   },
+   {
     "version": "v0.15.4",
     "date": "2026-11-08",
     "title": "unified web navigation, live mailbox updates, load test tooling",
