@@ -8,6 +8,20 @@ source: https://github.com/bongo-project/bongo/blob/main/docs/dev-quickstart.md
 {% raw %}
 # Dev Mode Quick Start
 
+`make generate` regenerates both templ output and
+`internal/web/static/css/generated_geometry.css`. The geometry stylesheet is a
+finite set of CSP-safe positioning classes used by mail gestures, context menus
+and calendar events; edit `scripts/gen-geometry` when its ranges or increments
+need to change, never the generated CSS directly.
+
+The application assets intentionally need no bundler. Templates load CSS in
+this cascade order: `bongo.css` (tokens and shell), `bongo-mail.css`,
+`bongo-apps.css`, `bongo-utilities.css`, then `bongo-components.css` (canonical
+shared component states). JavaScript loads `bongo.js` (core),
+`bongo-components.js` (Alpine registrations), `bongo-mail.js` (mail and keyboard
+interactions), then `bongo-pages.js` (page lifecycle hooks). Keep those orders
+when adding a test fixture or layout.
+
 ## Build and Run
 
 ```bash
@@ -115,8 +129,11 @@ func main() {
 
 `make ui-shots` builds the server into a temporary directory, starts a dev
 server on free ports, seeds it, logs in and captures each main route at
-1440x900 light, 1440x900 dark and 390x844 light with headless Chrome. It reports
-console errors, CSP violations and failed same-origin requests.
+desktop, phone and tablet sizes in light and dark modes with headless Chrome.
+Focused inbox captures also exercise 200% zoom, forced colours and reduced
+motion, while an automated audit reports duplicate IDs, unnamed controls,
+horizontal overflow, console errors, CSP violations and failed same-origin
+requests. Captures are full-page and include the open mobile navigation drawer.
 
 ```bash
 make ui-shots                 # screenshots go to a new temp dir

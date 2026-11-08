@@ -472,7 +472,7 @@ make seed       # seed test data into a running dev server
 make validate   # run the validation suite against a running dev server
 make test       # unit tests
 make test-all   # unit and integration tests
-make ui-shots OUT=~/shots   # screenshot every route (light, dark, mobile)
+make ui-shots OUT=~/shots   # screenshot routes and accessibility variants
 
 # Import mail from a directory
 ./bin/bongo-import directory /path/to/data \
