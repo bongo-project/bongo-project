@@ -12,6 +12,24 @@
   },
   "patches": [
    {
+    "version": "v0.15.7",
+    "date": "2026-11-08",
+    "title": "All Mail, Unread and Starred fixes, tag view actions, macOS shortcuts",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.7",
+    "annotated": true,
+    "patch": 7,
+    "notes": "#### All Mail, Unread and Starred\n\n- All Mail, Unread and Starred no longer list messages in Junk or Trash, or\n  in any folder below them. Before, All Mail left out only a folder named\n  exactly Trash, and Unread and Starred left out nothing.\n- All Mail still lists Sent and Drafts.\n- Actions in these views act on the message in the row. Before, a message\n  was found by its number alone, and numbers repeat between folders. Deleting\n  or starring a Sent message from All Mail could change the INBOX message\n  with the same number.\n- Bulk mark read, mark unread, star and unstar work in these views. They\n  failed before.\n- A link that names one of these views and a message number, such as an old\n  bookmark to /mail/starred/5, now shows Not Found.\n\n\n#### Tag views\n\n- Star, delete, the bulk actions and opening a message work in a tag view.\n  They failed before.\n\n\n#### Keyboard shortcuts\n\n- ? (shortcut help) and # (move to Trash) work on macOS keyboards.\n- The star in a message row can be toggled again after it changes, by click\n  or by keyboard.\n\n\n#### Documentation\n\n- The load test PRD records the results of the connection test (stage 7.4).\n\n\n#### Upgrade notes\n\n- No configuration changes.\n"
+   },
+   {
+    "version": "v0.15.6",
+    "date": "2026-11-08",
+    "title": "notification prompt closes correctly",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.6",
+    "annotated": true,
+    "patch": 6,
+    "notes": "#### Web interface\n\n- The desktop notification prompt now closes after enabling notifications or pressing its close button. Its flex layout had overridden the hidden attribute even though the prompt state changed correctly.\n\n\n#### Documentation\n\n- Record findings from load-test stages 7.1 and 7.3.\n\n\n#### Upgrade notes\n\n- No configuration changes are needed.\n"
+   },
+   {
     "version": "v0.15.5",
     "date": "2026-11-08",
     "title": "free the disk space of deleted mail",
