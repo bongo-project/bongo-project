@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.8",
+    "date": "2026-11-09",
+    "title": "keyboard shortcut help",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.8",
+    "annotated": true,
+    "patch": 8,
+    "notes": "#### Keyboard shortcuts\n\n- The keyboard shortcut help (?) opens as a centred dialog over the page\n  again, with every shortcut listed. Since v0.15.4 it appeared without its\n  layout.\n- On a small screen the shortcut list scrolls inside the dialog.\n\n\n#### Upgrade notes\n\n- No configuration changes.\n"
+   },
+   {
     "version": "v0.15.7",
     "date": "2026-11-08",
     "title": "All Mail, Unread and Starred fixes, tag view actions, macOS shortcuts",
