@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.9",
+    "date": "2026-11-10",
+    "title": "shortcut help close button",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.9",
+    "annotated": true,
+    "patch": 9,
+    "notes": "#### Keyboard shortcuts\n\n- The Close button in the keyboard shortcut help (?) has the same style as\n  the other secondary buttons. In v0.15.8 it showed as an unstyled square\n  button.\n\n\n#### Upgrade notes\n\n- No configuration changes.\n"
+   },
+   {
     "version": "v0.15.8",
     "date": "2026-11-09",
     "title": "keyboard shortcut help",
