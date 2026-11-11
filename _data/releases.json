@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.10",
+    "date": "2026-11-11",
+    "title": "Go security fix, mail delivery under load, faster restarts",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.10",
+    "annotated": true,
+    "patch": 10,
+    "notes": "#### Security\n\n- Bongo is built with Go 1.27.4, which fixes GO-2026-6859 (CVE-2026-97054).\n  In earlier builds an HTTP request with a body over the size limit could\n  make the server panic.\n\n\n#### Mail delivery\n\n- A message accepted over SMTP is no longer set aside in spool/error/ when a\n  storage write is refused under heavy load. The write is retried for up to\n  two minutes. Earlier versions kept such a message in spool/error/ and did\n  not deliver it.\n- Blob garbage collection no longer stops a pass when a queued message moves\n  while the pass reads the spool. Under steady mail traffic earlier versions\n  skipped most passes, and disk use only grew.\n\n\n#### Restarts\n\n- A restart no longer restores the Raft snapshot and rebuilds every mailbox\n  index before it accepts connections. On a test store with 75,000 messages\n  that took 28 minutes, and the time grew with the amount of stored mail.\n- After a clean shutdown the server writes derived-indexes.clean in the data\n  directory. The indexes are rebuilt at start only when that file is absent\n  or out of date, which follows a crash or a forced stop.\n- The search index is now included in that rebuild. Earlier versions rebuilt\n  the mailbox index only.\n\n\n#### Upgrade notes\n\n- The first start after upgrading rebuilds all indexes once, because earlier\n  versions do not write derived-indexes.clean. The start takes longer than\n  usual; the time grows with the amount of stored mail.\n- No configuration changes.\n"
+   },
+   {
     "version": "v0.15.9",
     "date": "2026-11-10",
     "title": "shortcut help close button",
