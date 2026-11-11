@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.11",
+    "date": "2026-11-11",
+    "title": "clean shutdown with web sessions open",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.11",
+    "annotated": true,
+    "patch": 11,
+    "notes": "#### Shutdown\n\n- The server now ends live web UI update streams as soon as shutdown\n  starts. Earlier versions waited 10 seconds for each open browser tab's\n  stream and then exited with status 1.\n- Under a container runtime's default 10-second stop timeout, that wait\n  led to a forced kill before the server closed Raft and storage. The\n  derived-indexes.clean file was not written, and the next start rebuilt\n  every index.\n- A single-node server no longer attempts a Raft leadership transfer on\n  shutdown. Earlier versions logged \"raft: leadership transfer failed\" at\n  WARN on every stop.\n- An error from bongo serve after startup no longer prints the command's\n  usage text. A mistyped flag still prints it.\n\n\n#### Upgrade notes\n\n- No configuration changes.\n- The server can still wait up to 30 seconds for a message in delivery to\n  finish before it stops. Set the container stop timeout to at least 45\n  seconds (Docker Compose: stop\\_grace\\_period: 45s).\n"
+   },
+   {
     "version": "v0.15.10",
     "date": "2026-11-11",
     "title": "Go security fix, mail delivery under load, faster restarts",
