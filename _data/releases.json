@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.12",
+    "date": "2026-11-12",
+    "title": "inbound delivery in arrival order",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.12",
+    "annotated": true,
+    "patch": 12,
+    "notes": "#### Delivery\n\n- The inbound spool now delivers the message that has waited longest\n  first. Earlier versions picked the lowest message ID. IDs are random,\n  so during a delivery backlog a message could wait until the backlog\n  cleared, which in load tests took several hours.\n- With no backlog, delivery is unchanged.\n\n\n#### Upgrade notes\n\n- No configuration changes.\n- Messages already in the spool are delivered in the order they were\n  queued.\n"
+   },
+   {
     "version": "v0.15.11",
     "date": "2026-11-11",
     "title": "clean shutdown with web sessions open",

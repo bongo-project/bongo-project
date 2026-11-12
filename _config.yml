@@ -5,7 +5,7 @@ baseurl: ""
 
 # Current release, shown on the home page. Update at each release
 # (scripts/sync_releases.py refreshes the releases page itself).
-latest_release: v0.15.11
+latest_release: v0.15.12
 repository_url: https://github.com/bongo-project/bongo
 
 markdown: kramdown
