@@ -76,8 +76,8 @@ far more accounts than it has users connected at once.
 | v0.15.10 | Every start restored the full snapshot and rebuilt all indexes (28 minutes at 75,000 messages) |
 | v0.15.11 | Stop waited for open web connections and was killed, which forced an index rebuild at the next start |
 | v0.15.12 | The spool delivered messages in random order instead of arrival order |
-| Next release | The queue's "oldest pending" figure showed the next message due, not the oldest |
-| Next release | A line over the SMTP length limit got a temporary error, so senders retried it for days |
+| v0.15.13 | The queue's "oldest pending" figure showed the next message due, not the oldest |
+| v0.15.13 | A line over the SMTP length limit got a temporary error, so senders retried it for days |
 
 The compose template's memory limit was raised from 512 MB to 2 GB.
 
