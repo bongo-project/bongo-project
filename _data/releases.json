@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.13",
+    "date": "2026-11-13",
+    "title": "load test fixes",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.13",
+    "annotated": true,
+    "patch": 13,
+    "notes": "#### SMTP\n\n- A message with a line longer than the SMTP line limit (2,000\n  characters) is now refused with a permanent error, 500 5.5.2 \"Line\n  too long\". Earlier versions answered with a temporary error, 451\n  4.3.0, so the sending server retried the message until its queue\n  lifetime ran out. The event is logged as a warning, not an error.\n\n\n#### Outbound queue\n\n- The bongo\\_queue\\_oldest\\_pending\\_seconds metric and the \"oldest\n  pending\" figure on the admin queue page now show the age of the\n  oldest queued message. Earlier versions showed the age of the\n  message due to be retried next, which during a backlog could read a\n  few seconds while the oldest message had waited 30 minutes.\n\n\n#### Deployment\n\n- The compose template (deploy/docker-compose.yml) now limits the\n  container to 2 GB of memory instead of 512 MB. In load tests the\n  server used about 1 GB with 820 connected clients. Existing compose\n  files are not changed by an upgrade.\n- docs/install.md has a new Sizing section with CPU, memory and disk\n  figures from the load test.\n\n\n#### Load test\n\n- Results of the first load test run are in\n  docs/design/load-test-results.md. The numbers are preliminary: the\n  test machines had shared CPUs.\n\n\n#### Upgrade notes\n\n- No configuration changes.\n"
+   },
+   {
     "version": "v0.15.12",
     "date": "2026-11-12",
     "title": "inbound delivery in arrival order",

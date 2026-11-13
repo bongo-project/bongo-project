@@ -67,6 +67,35 @@ software:
   (POP3), and `443` (web UI). Binding ports below 1024 needs root or a
   capability grant (see step 6).
 
+### Sizing
+
+Measured on a 2 vCPU (shared), 4 GB virtual server with no swap, antivirus
+off. The numbers are preliminary; `docs/design/load-test-results.md` has the
+conditions.
+
+- **CPU is the first limit.** Search indexing of new mail and password checks
+  for logins use most of it. That machine sustained about 3 messages/s of
+  inbound mail with about 820 connected clients, and about 16 new logins per
+  second. CalDAV and CardDAV clients check the password on every request, so
+  each one costs more CPU than an IMAP client.
+- **Memory.** Plan for about 1 GB with several hundred clients, plus about
+  100 KB per open IMAP connection. The server has no memory ceiling of its own;
+  without swap, running out stops it. The container in
+  `deploy/docker-compose.yml` is limited to 2 GB (`mem_limit`); raise it on a
+  larger machine.
+- **Disk.** The search index takes several times the space of the mail it
+  indexes: about 85 KB per message, or about 340 KB for an account holding
+  five small messages. Keep the data directory on local SSD or NVMe; Bongo
+  refuses new mail with a temporary error while free space is below
+  `storage.min_free_mb` (default 1,024 MB), and accepts it again once space
+  returns (free space is checked every 10 s).
+- **Restarts.** A clean stop and start takes seconds. After an unclean stop
+  (power loss, `kill -9`, out of memory) every search and folder index is
+  rebuilt before the server accepts connections: 68 minutes for 10,000 small
+  accounts on that machine. Let `systemctl stop` finish rather than killing
+  the process; `deploy/bongo.service` keeps systemd's default stop timeout
+  (90 s).
+
 ---
 
 ## 3. Install the files
