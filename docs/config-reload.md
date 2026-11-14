@@ -35,6 +35,7 @@ reload`.
 | Key | Effect |
 |-----|--------|
 | `telemetry.log.level` | Applies to the next log line. |
+| `telemetry.log.components` | Per-component levels; apply to the next log line. Removing an entry returns that component to `telemetry.log.level`. |
 | `antispam.builtin.threshold`, `antispam.builtin.high_threshold` | Applied together, from the next message scored. |
 | `smtp.trusted_networks` | Applies from the next message, including on connections already open. |
 | `antivirus.clamav.on_failure` | Applies from the next message scanned. |

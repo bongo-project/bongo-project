@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.14",
+    "date": "2026-11-14",
+    "title": "per-component log levels",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.14",
+    "annotated": true,
+    "patch": 14,
+    "notes": "#### Logging\n\n- New setting telemetry.log.components sets the log level for single\n  components, for example imap = \"debug\", while telemetry.log.level\n  sets it for the rest of the server. Levels are debug, info, warn and\n  error. A component is the prefix of a log message, such as imap or\n  smtp; deploy/LOGGING.md lists all 65. Errors are always logged. The\n  setting applies on a reload, without a restart. An unknown component\n  or level stops the server from starting, and makes a reload fail\n  without changing anything.\n- Successful IMAP, POP3 and SMTP logins are now logged at info, with\n  the user ID and source IP address. Earlier versions logged them at\n  debug. Failed logins are still logged at warn. Passwords are never\n  logged.\n\n\n#### Load test\n\n- The final load test run uses the same shared-vCPU machine type as\n  the first run, because most installations run on a VM or in a\n  container. A run on dedicated hardware is the last test of the\n  series. docs/load-testing.md and docs/design/load-test-results.md\n  are updated.\n\n\n#### Upgrade notes\n\n- No configuration changes are required. Without\n  telemetry.log.components, logging behaves as before, apart from the\n  login lines at info.\n"
+   },
+   {
     "version": "v0.15.13",
     "date": "2026-11-13",
     "title": "load test fixes",
