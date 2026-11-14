@@ -14,14 +14,15 @@ limit first. It does not give publishable capacity figures.
 
 The numbers on this page are preliminary.
 
-- Both machines had shared vCPUs. A shared CPU varies with other tenants, so two
-  runs cannot be held to the project's 10% agreement rule.
+- Each stage ran once. A headline figure needs two runs that agree within 10%.
 - The stages ran on four releases, from v0.15.3 to v0.15.12. Fixes went in
   between stages.
 - Antivirus scanning was off in every stage. Antispam was on.
 
-Headline figures will come from a final run on one tagged release, on a machine
-with dedicated CPU, repeated twice.
+Headline figures will come from a final run on one tagged release, on the same
+kind of shared-vCPU machine, repeated twice. Most installations run on a VM or in
+a container. A run on dedicated hardware is the last test of the series and is
+reported separately.
 
 ## Setup
 
@@ -84,7 +85,7 @@ The compose template's memory limit was raised from 512 MB to 2 GB.
 ## Not measured in this run
 
 - The effect of antivirus scanning.
-- How the limits move with dedicated or more CPU.
+- How the limits move with more CPU, or on dedicated hardware.
 - Backup, start and garbage-collection times above 75,000 messages.
 
 ## Repeating the run
