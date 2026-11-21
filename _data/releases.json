@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.15",
+    "date": "2026-11-21",
+    "title": "dependency updates and Add a device layout",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.15",
+    "annotated": true,
+    "patch": 15,
+    "notes": "#### Web interface\n\n- The Add a device pages are easier to read. Setup instructions use the\n  normal text colour, the Apple steps are an indented list, and field\n  labels sit above their fields. The server settings shown for\n  Thunderbird and other mail apps are one row per setting, with the\n  label beside the value and a copy button. On narrow screens the label\n  sits above the value.\n\n\n#### Dependencies\n\n- golang.org/x/crypto is updated to v0.59.0, which fixes GO-2026-5932.\n  The advisory is in the openpgp package. Bongo does not use that\n  package, so earlier versions were not affected.\n- templ is updated to v0.3.1118 and every template is regenerated with\n  it. templ now replaces URL attributes that use an unknown scheme. The\n  QR codes on the two-factor setup and Add a device pages are data:\n  URIs, so the templates mark them as safe; a test checks that both QR\n  codes still render.\n\n\n#### Build\n\n- Building from source needs templ v0.3.1118 (go install\n  github.com/a-h/templ/cmd/templ@v0.3.1118). Templates generated with an\n  older templ differ from the committed files.\n\n\n#### Upgrade notes\n\n- No configuration or data changes. v0.15.15 is built from the v0.15\n  branch and contains none of the v0.16 work on main.\n"
+   },
+   {
     "version": "v0.15.14",
     "date": "2026-11-14",
     "title": "per-component log levels",

@@ -19,7 +19,7 @@ binary is `bongo`.
 - **Go** at the version named in `go.mod` (currently 1.27): <https://go.dev/dl/>
 - **templ CLI**, which compiles `.templ` templates into Go code:
   ```bash
-  go install github.com/a-h/templ/cmd/templ@latest
+  go install github.com/a-h/templ/cmd/templ@v0.3.1118
   ```
 - **Git**, to clone the repository
 - A current web browser (Chrome, Firefox, Safari or Edge)
