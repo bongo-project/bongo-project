@@ -12,6 +12,15 @@
   },
   "patches": [
    {
+    "version": "v0.15.16",
+    "date": "2026-11-26",
+    "title": "go-smtp security update",
+    "url": "https://github.com/bongo-project/bongo/releases/tag/v0.15.16",
+    "annotated": true,
+    "patch": 16,
+    "notes": "#### Security\n\n- github.com/emersion/go-smtp is updated to v0.25.1, which fixes\n  GO-2026-7029. In v0.24.0 a client could make the server allocate\n  unbounded memory during a BDAT transaction. Bongo's SMTP listeners\n  (MX and submission) accept BDAT, so every earlier v0.15 release is\n  affected.\n\n\n#### Upgrade notes\n\n- No configuration or data changes. v0.15.16 is built from the v0.15\n  branch and contains none of the v0.16 work on main.\n"
+   },
+   {
     "version": "v0.15.15",
     "date": "2026-11-21",
     "title": "dependency updates and Add a device layout",
