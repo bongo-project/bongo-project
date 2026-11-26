@@ -14,6 +14,15 @@
 - name: caldav-carddav
   title: "CalDAV and CardDAV"
   url: /docs/caldav-carddav/
+- name: shared-folders
+  title: "Sharing folders"
+  url: /docs/shared-folders/
+- name: groups
+  title: "Group addresses"
+  url: /docs/groups/
+- name: fetching-mail
+  title: "Fetching mail"
+  url: /docs/fetching-mail/
 - name: importing
   title: "Importing mail"
   url: /docs/importing/

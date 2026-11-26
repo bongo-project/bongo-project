@@ -41,6 +41,14 @@ The `--dst-port` default of 1143 is the plain IMAP port that
 The `--state` flag enables resumable imports. If the import is interrupted,
 re-running with the same state file skips already-imported messages.
 
+## Reserved folder names
+
+The server refuses to create a folder called `Shared` or `Other Users`, or any
+folder below them (`Shared/Team`), in any letter case. These are the IMAP
+NAMESPACE prefixes (`imap.shared_prefix`, `imap.other_users_prefix`). A source
+folder with such a name fails with `NO` and has to be renamed in the source
+before the import.
+
 ## Sources
 
 ### Thunderbird Local Folders

@@ -321,6 +321,30 @@ it is cut, the command still prints what it has, warns on stderr and exits
 non-zero (narrow it with `--domain`). An older node that lacks these routes
 answers 404, which the command reports as such.
 
+### Locked out of two-factor authentication
+
+A user who has lost both the authenticator app and the recovery codes cannot
+sign in to the web UI. An administrator turns two-factor authentication off for
+them under **Admin → Users →** the user **→ Reset two-factor**. A domain
+administrator can do this for users of their domains, but not for a global
+administrator. When no administrator can sign in, run the reset on the server,
+with the same control listener and session secret as `user create`:
+
+```bash
+bongo user reset-2fa --email user@example.com \
+  --http-addr http://127.0.0.1:8081 \
+  --session-secret "$BONGO_WEB_SESSION_SECRET"
+```
+
+`--email` must be the account's primary address; an alias is refused. The
+reset clears the authenticator secret, the recovery codes and the
+**Require app passwords** switch, and ends every web session of the account.
+App passwords keep working. The user signs in with the account password and can
+set up two-factor authentication again; if the server requires two-factor
+authentication for everyone, they are asked to at once. The command exits
+non-zero when the address is not an account's primary address or two-factor
+authentication is not on.
+
 ---
 
 ## 9. Importing existing mail

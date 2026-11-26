@@ -134,6 +134,83 @@ what that gate is guarding — work through it before forming a cluster.
    but no server constructs the gRPC `AgentServer` it registers with (see
    step 4).
 
+7. **Run one binary version on every node** before using any feature listed
+   under [Mixed-version clusters](#mixed-version-clusters).
+
+## Mixed-version clusters
+
+Run one binary version on every node before using any feature listed here.
+Nodes do not publish their version, and a new command type is not gated on the
+cluster's lowest version. Version gating is outstanding work (see
+`prds/done/prd-hardening-v0.9.md`, 8.2).
+
+### What an older node does
+
+Every write goes through the Raft log, and each node applies it with
+`FSM.applyProto` (`internal/cluster/fsm.go`). A composite command is a `PUT` to
+a synthetic key prefix such as `/__acl__/`, which the FSM sends to an
+`Is*SyntheticCommand` predicate. Two things can happen on a node whose binary
+does not match:
+
+- **The prefix is unknown to it.** No predicate matches, so the command falls
+  through to the plain `f.store.Set(cmd.Key, cmd.Value)` and is stored as a
+  literal Pebble key. None of the intended keys is written.
+- **The prefix is known but the payload is not.** The command fails validation,
+  the FSM logs an error (for example `fsm: acl synthetic command failed`) and
+  writes nothing.
+
+In both cases the node still records the entry as applied
+(`setAppliedIndex`, `/system/raft/applied_index`). Replaying the log after the
+node is upgraded skips that entry, so **upgrading afterwards does not repair
+the node**. Its replicas stay diverged until its data is rebuilt, not only for
+the length of the mixed window.
+
+"Older node" here means any v0.15.x binary (the latest release is v0.15.15).
+The rule is the same for all of them: upgrade every node first. Production
+runs one node, so this applies only to a cluster.
+
+### Commands that need every node upgraded
+
+New or extended in v0.16 (checked against v0.15.15):
+
+| Command | What an older node does | What breaks |
+|---|---|---|
+| `/__group__/` (`internal/store/groupcommand.go`), new | Stores a literal key. | No group, no group address record and no member index on that node. A group address is never resolved there. Whether mail to it bounces depends on the domain: with a catch-all the resolver hands it to the catch-all owner, otherwise the RCPT is refused with 550 5.7.1 or 5.1.1 (`internal/smtp/server.go`, hosted-domain check). Posting policies other than `anyone` are not enforced there. User deletion sends `remove_user` every time, so the older node gains a harmless literal key on each deletion. |
+| `/__mailbox_assignid__/` (`internal/store/mailbox.go`), new | Stores a literal key. `IsMailboxSyntheticCommand` in v0.15.15 lists only append, copy, delete, deliver, expunge, move, rename and subscribe. | The node holds no mailbox id. Its rename drops the id and leaves the `mailboxid` lookup key stale, and its delete leaves that key behind. `MailboxNameByID` reads these cases as not found. |
+| `/__mailbox_xfer__/` (`internal/store/mailbox_transfer.go`), new | Stores a literal key. | The destination copy of a cross-owner COPY or MOVE is missing on that node. For a MOVE the source message is still there too. |
+| `/__user_usage__/` (`internal/store/user_usage.go`), new | Stores a literal key. | The node holds no per-user usage, reads 0 and does not enforce `UserProfile.quota_bytes`. Enforcement depends on which node takes the request. |
+| `/__acl__/` with kind `mailbox` or `addressbook` (`internal/store/aclcommand.go`), extended | Refuses it at validation: v0.15.15 knows only `calendar` (`aclKinds`). Nothing is written. | Folder and address-book grants are missing on that node. Its owner revoke and orphan sweep ignore these kinds. It lists no shared address books and answers 404 on CardDAV `shared-` paths, so a client balanced across nodes sees the book appear and vanish. |
+| `/__acl__/` with a `g:` grantee, extended | v0.15.15 `ACLKey` always writes `/u:` plus the grantee, so a group grant lands under a bogus user grantee that authorises nobody. | The group's members get no access on that node. It also has no `/__group__/`, so deleting a group there leaves the grants behind. |
+
+Already required a full upgrade in v0.15:
+
+- `/__acl__/` itself, including the `accept` op and `keep_state` (calendar
+  sharing and the invitation flow).
+- `/__bayes_train__/{user}`: an older node counts nothing, so Bayes counts
+  diverge and cannot be recovered by replay.
+- `/__apppassword_touch__/`: an older node stores a literal key and
+  `last_used_at` lags. Authentication is unaffected.
+- `/__apppassword_ticket__/consume`: an older node leaves the device link
+  unused, so a link can be redeemed on more than one node.
+
+### Shared inboxes
+
+A shared inbox is not a command. `UserProfile.kind = "shared"` and field 16
+`shared_members` are plain profile writes, and an older node keeps both. The
+risk is in what the older node does not check. In v0.15.15,
+`auth.CheckStanding` refuses only a disabled account or kind `resource`
+(`internal/auth/local.go`), and the admin `ResetPassword` handler refuses only
+resources (`internal/web/handlers/admin.go`). An admin using an older node can
+therefore set a password on a shared account, and that account could then log
+in there over web, IMAP, POP3, SMTP and DAV. Send-as for a shared address fails
+closed on an older node. Upgrade every node before creating a shared inbox.
+
+### Before you upgrade
+
+Upgrade every node, then start creating groups, sharing folders, address books
+or calendars, using cross-owner copy or move, setting per-user quotas or
+creating shared inboxes. Nothing in the server stops you doing these earlier.
+
 ## Peer listener design note (blob sync and cluster join)
 
 Before this change, both peer-facing endpoints were routes on the public web
